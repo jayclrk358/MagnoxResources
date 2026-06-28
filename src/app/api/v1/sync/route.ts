@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
-import { authenticatePlugin } from "@/lib/plugin-auth";
 import { prisma } from "@/lib/prisma";
 import { PluginType } from "@prisma/client";
 
+function getServerFromAuth(request: Request) {
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader?.startsWith("Bearer ")) return null;
+  return authHeader.slice(7);
+}
+
 export async function POST(request: Request) {
-  const server = await authenticatePlugin(request);
-  if (!server) {
+  const token = getServerFromAuth(request);
+  if (!token) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
@@ -18,6 +23,14 @@ export async function POST(request: Request) {
   const type = pluginType as PluginType;
   if (!Object.values(PluginType).includes(type)) {
     return NextResponse.json({ error: "Invalid plugin type" }, { status: 400 });
+  }
+
+  let server = await prisma.server.findUnique({ where: { token } });
+
+  if (!server) {
+    server = await prisma.server.create({
+      data: { token, name: "My Server" },
+    });
   }
 
   const plugin = await prisma.plugin.upsert({
@@ -53,8 +66,8 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  const server = await authenticatePlugin(request);
-  if (!server) {
+  const token = getServerFromAuth(request);
+  if (!token) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
@@ -63,6 +76,11 @@ export async function GET(request: Request) {
 
   if (!pluginType || !Object.values(PluginType).includes(pluginType)) {
     return NextResponse.json({ error: "Invalid plugin type" }, { status: 400 });
+  }
+
+  const server = await prisma.server.findUnique({ where: { token } });
+  if (!server) {
+    return NextResponse.json({ changes: [] });
   }
 
   const plugin = await prisma.plugin.findUnique({

@@ -1,8 +1,18 @@
 import { NextResponse } from "next/server";
-import { authenticatePlugin } from "@/lib/plugin-auth";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
-  const server = await authenticatePlugin(request);
+  const authHeader = request.headers.get("authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  }
+
+  const token = authHeader.slice(7);
+  const server = await prisma.server.findUnique({
+    where: { token },
+    include: { plugins: true },
+  });
+
   if (!server) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }

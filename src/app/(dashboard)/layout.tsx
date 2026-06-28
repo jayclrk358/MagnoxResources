@@ -1,12 +1,6 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-
-interface User {
-  username: string;
-  email: string;
-}
 
 export default function DashboardLayout({
   children,
@@ -15,22 +9,13 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    fetch("/api/auth/me")
-      .then((r) => (r.ok ? r.json() : null))
-      .then(setUser);
-  }, []);
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
   }
 
-  const navItems = [
-    { href: "/dashboard", label: "Dashboard" },
-  ];
+  const navItems = [{ href: "/dashboard", label: "Dashboard" }];
 
   return (
     <div className="min-h-screen">
@@ -56,17 +41,12 @@ export default function DashboardLayout({
               ))}
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            {user && (
-              <span className="text-sm text-gray-400">{user.username}</span>
-            )}
-            <button
-              onClick={handleLogout}
-              className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-300 transition hover:border-danger hover:text-danger"
-            >
-              Sign Out
-            </button>
-          </div>
+          <button
+            onClick={handleLogout}
+            className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-300 transition hover:border-danger hover:text-danger"
+          >
+            Disconnect
+          </button>
         </div>
       </nav>
       <main className="mx-auto max-w-7xl px-6 py-8">{children}</main>

@@ -145,9 +145,7 @@ function ConfigSection({
       {Object.entries(data).map(([key, value]) => {
         const fullPath = parentPath ? `${parentPath}.${key}` : key;
         const isNested =
-          typeof value === "object" &&
-          value !== null &&
-          !Array.isArray(value);
+          typeof value === "object" && value !== null && !Array.isArray(value);
 
         return (
           <div key={key}>
@@ -157,7 +155,9 @@ function ConfigSection({
               }`}
             >
               <label className="mb-1 block text-sm font-medium text-gray-300">
-                {key.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+                {key
+                  .replace(/-/g, " ")
+                  .replace(/\b\w/g, (c) => c.toUpperCase())}
                 <span className="ml-2 font-mono text-xs text-gray-600">
                   {key}
                 </span>
@@ -174,9 +174,9 @@ function ConfigSection({
 export default function ConfigEditorPage({
   params,
 }: {
-  params: Promise<{ id: string; pluginId: string }>;
+  params: Promise<{ pluginId: string }>;
 }) {
-  const { id, pluginId } = use(params);
+  const { pluginId } = use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
   const targetFile = searchParams.get("file");
@@ -203,9 +203,7 @@ export default function ConfigEditorPage({
 
   useEffect(() => {
     async function load() {
-      const res = await fetch(
-        `/api/servers/${id}/plugins/${pluginId}/configs`
-      );
+      const res = await fetch(`/api/server/plugins/${pluginId}/configs`);
       if (res.ok) {
         const data = await res.json();
         setConfigs(data);
@@ -217,7 +215,7 @@ export default function ConfigEditorPage({
       setLoading(false);
     }
     load();
-  }, [id, pluginId, targetFile, selectConfig]);
+  }, [pluginId, targetFile, selectConfig]);
 
   function handleChange(path: string, value: unknown) {
     setSaved(false);
@@ -257,7 +255,7 @@ export default function ConfigEditorPage({
     }
 
     const res = await fetch(
-      `/api/servers/${id}/plugins/${pluginId}/configs/${encodeURIComponent(selectedConfig.fileName)}`,
+      `/api/server/plugins/${pluginId}/configs/${encodeURIComponent(selectedConfig.fileName)}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -289,14 +287,14 @@ export default function ConfigEditorPage({
   return (
     <div>
       <button
-        onClick={() => router.push(`/servers/${id}`)}
+        onClick={() => router.push("/dashboard")}
         className="mb-6 text-sm text-gray-400 transition hover:text-white"
       >
-        &larr; Back to Server
+        &larr; Back to Dashboard
       </button>
 
       <div className="flex flex-col gap-6 lg:flex-row">
-        {/* Sidebar: Config File List */}
+        {/* Sidebar */}
         <div className="w-full lg:w-64">
           <h3 className="mb-3 text-sm font-semibold text-gray-300">
             Config Files
@@ -321,7 +319,7 @@ export default function ConfigEditorPage({
           </div>
         </div>
 
-        {/* Main: Config Editor */}
+        {/* Editor */}
         <div className="flex-1">
           {selectedConfig ? (
             <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
@@ -340,9 +338,7 @@ export default function ConfigEditorPage({
                     onClick={() => {
                       setJsonMode(!jsonMode);
                       if (!jsonMode) {
-                        setJsonText(
-                          JSON.stringify(editedContent, null, 2)
-                        );
+                        setJsonText(JSON.stringify(editedContent, null, 2));
                       } else {
                         try {
                           setEditedContent(JSON.parse(jsonText));

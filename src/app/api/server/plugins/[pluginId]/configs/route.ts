@@ -1,22 +1,22 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getServerToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ id: string; pluginId: string }> }
+  { params }: { params: Promise<{ pluginId: string }> }
 ) {
-  const session = await getSession();
-  if (!session) {
+  const token = await getServerToken();
+  if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id, pluginId } = await params;
+  const { pluginId } = await params;
 
   const plugin = await prisma.plugin.findFirst({
     where: {
       id: pluginId,
-      server: { id, ownerId: session.userId },
+      server: { token },
     },
     include: { configs: true },
   });

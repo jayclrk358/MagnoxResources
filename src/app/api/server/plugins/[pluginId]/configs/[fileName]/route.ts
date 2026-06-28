@@ -1,24 +1,24 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getServerToken } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ id: string; pluginId: string; fileName: string }> }
+  { params }: { params: Promise<{ pluginId: string; fileName: string }> }
 ) {
-  const session = await getSession();
-  if (!session) {
+  const token = await getServerToken();
+  if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id, pluginId, fileName } = await params;
+  const { pluginId, fileName } = await params;
 
   const config = await prisma.configFile.findFirst({
     where: {
       fileName: decodeURIComponent(fileName),
       plugin: {
         id: pluginId,
-        server: { id, ownerId: session.userId },
+        server: { token },
       },
     },
   });
@@ -32,14 +32,14 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string; pluginId: string; fileName: string }> }
+  { params }: { params: Promise<{ pluginId: string; fileName: string }> }
 ) {
-  const session = await getSession();
-  if (!session) {
+  const token = await getServerToken();
+  if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { id, pluginId, fileName } = await params;
+  const { pluginId, fileName } = await params;
   const body = await request.json();
   const { content } = body as { content: unknown };
 
@@ -52,7 +52,7 @@ export async function PUT(
       fileName: decodeURIComponent(fileName),
       plugin: {
         id: pluginId,
-        server: { id, ownerId: session.userId },
+        server: { token },
       },
     },
   });

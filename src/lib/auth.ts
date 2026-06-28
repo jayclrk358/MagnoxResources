@@ -1,36 +1,32 @@
-import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { prisma } from "./prisma";
 
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || "dev-secret-change-me"
-);
-
-export interface JwtPayload {
-  userId: string;
-  email: string;
-  username: string;
-}
-
-export async function signToken(payload: JwtPayload): Promise<string> {
-  return new SignJWT(payload as unknown as Record<string, unknown>)
-    .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("7d")
-    .setIssuedAt()
-    .sign(secret);
-}
-
-export async function verifyToken(token: string): Promise<JwtPayload | null> {
-  try {
-    const { payload } = await jwtVerify(token, secret);
-    return payload as unknown as JwtPayload;
-  } catch {
-    return null;
-  }
-}
-
-export async function getSession(): Promise<JwtPayload | null> {
+export async function getServer() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+  const token = cookieStore.get("server_token")?.value;
   if (!token) return null;
-  return verifyToken(token);
+
+  return prisma.server.findUnique({
+    where: { token },
+    include: {
+      plugins: {
+        include: {
+          configs: {
+            select: {
+              id: true,
+              name: true,
+              fileName: true,
+              pending: true,
+              updatedAt: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function getServerToken() {
+  const cookieStore = await cookies();
+  return cookieStore.get("server_token")?.value ?? null;
 }
