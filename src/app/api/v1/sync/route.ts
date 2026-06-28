@@ -9,60 +9,65 @@ function getServerFromAuth(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const token = getServerFromAuth(request);
-  if (!token) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
+  try {
+    const token = getServerFromAuth(request);
+    if (!token) {
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    }
 
-  const body = await request.json();
-  const { pluginType, configs } = body as {
-    pluginType: string;
-    configs: { fileName: string; name: string; content: unknown }[];
-  };
+    const body = await request.json();
+    const { pluginType, configs } = body as {
+      pluginType: string;
+      configs: { fileName: string; name: string; content: unknown }[];
+    };
 
-  const type = pluginType as PluginType;
-  if (!Object.values(PluginType).includes(type)) {
-    return NextResponse.json({ error: "Invalid plugin type" }, { status: 400 });
-  }
+    const type = pluginType as PluginType;
+    if (!Object.values(PluginType).includes(type)) {
+      return NextResponse.json({ error: "Invalid plugin type" }, { status: 400 });
+    }
 
-  let server = await prisma.server.findUnique({ where: { token } });
+    let server = await prisma.server.findUnique({ where: { token } });
 
-  if (!server) {
-    server = await prisma.server.create({
-      data: { token, name: "My Server" },
-    });
-  }
+    if (!server) {
+      server = await prisma.server.create({
+        data: { token, name: "My Server" },
+      });
+    }
 
-  const plugin = await prisma.plugin.upsert({
-    where: { serverId_type: { serverId: server.id, type } },
-    create: {
-      type,
-      serverId: server.id,
-      version: body.version,
-    },
-    update: {
-      version: body.version,
-      lastSync: new Date(),
-    },
-  });
-
-  for (const config of configs) {
-    await prisma.configFile.upsert({
-      where: { pluginId_fileName: { pluginId: plugin.id, fileName: config.fileName } },
+    const plugin = await prisma.plugin.upsert({
+      where: { serverId_type: { serverId: server.id, type } },
       create: {
-        name: config.name,
-        fileName: config.fileName,
-        content: config.content as object,
-        pluginId: plugin.id,
+        type,
+        serverId: server.id,
+        version: body.version,
       },
       update: {
-        content: config.content as object,
-        name: config.name,
+        version: body.version,
+        lastSync: new Date(),
       },
     });
-  }
 
-  return NextResponse.json({ ok: true, pluginId: plugin.id });
+    for (const config of configs) {
+      await prisma.configFile.upsert({
+        where: { pluginId_fileName: { pluginId: plugin.id, fileName: config.fileName } },
+        create: {
+          name: config.name,
+          fileName: config.fileName,
+          content: config.content as object,
+          pluginId: plugin.id,
+        },
+        update: {
+          content: config.content as object,
+          name: config.name,
+        },
+      });
+    }
+
+    return NextResponse.json({ ok: true, pluginId: plugin.id });
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
 
 export async function GET(request: Request) {
