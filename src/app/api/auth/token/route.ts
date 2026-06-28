@@ -5,17 +5,16 @@ export async function POST(request: Request) {
   const body = await request.json();
   const { token } = body as { token: string };
 
-  if (!token) {
-    return NextResponse.json({ error: "Token is required" }, { status: 400 });
+  if (!token || token.length < 16) {
+    return NextResponse.json({ error: "Invalid token" }, { status: 400 });
   }
 
-  const server = await prisma.server.findUnique({ where: { token } });
+  let server = await prisma.server.findUnique({ where: { token } });
 
   if (!server) {
-    return NextResponse.json(
-      { error: "Invalid token. Make sure your plugin has synced at least once." },
-      { status: 401 }
-    );
+    server = await prisma.server.create({
+      data: { token, name: "My Server" },
+    });
   }
 
   const response = NextResponse.json({ ok: true, serverName: server.name });
