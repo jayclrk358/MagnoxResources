@@ -118,14 +118,15 @@ export async function GET(request: Request) {
     content: c.content,
   }));
 
+  await prisma.plugin.update({
+    where: { id: plugin.id },
+    data: { lastSync: new Date() },
+  });
+
   if (changes.length > 0) {
     await prisma.configFile.updateMany({
       where: { pluginId: plugin.id, pending: true },
       data: { pending: false },
-    });
-    await prisma.plugin.update({
-      where: { id: plugin.id },
-      data: { lastSync: new Date() },
     });
   }
 

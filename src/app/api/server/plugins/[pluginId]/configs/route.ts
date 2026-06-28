@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import { getServerToken } from "@/lib/auth";
+import { getServerTokens } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ pluginId: string }> }
 ) {
-  const token = await getServerToken();
-  if (!token) {
+  const tokens = await getServerTokens();
+  if (tokens.length === 0) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -16,7 +16,7 @@ export async function GET(
   const plugin = await prisma.plugin.findFirst({
     where: {
       id: pluginId,
-      server: { token },
+      server: { token: { in: tokens } },
     },
     include: { configs: true },
   });

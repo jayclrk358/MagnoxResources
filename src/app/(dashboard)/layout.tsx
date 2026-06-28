@@ -69,7 +69,7 @@ export default function DashboardLayout({
       </nav>
       <main className="mx-auto max-w-7xl px-6 py-8">{children}</main>
       <footer className="border-t border-dark-700 py-6 text-center text-xs text-gray-600">
-        MagnoxResources Panel &middot; Configs sync every 30 seconds
+        MagnoxResources Panel &middot; Plugins sync every 30 seconds
       </footer>
     </div>
   );

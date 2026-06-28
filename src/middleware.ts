@@ -1,6 +1,20 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+function hasValidTokens(request: NextRequest): boolean {
+  const tokensRaw = request.cookies.get("server_tokens")?.value;
+  if (tokensRaw) {
+    try {
+      const parsed = JSON.parse(tokensRaw);
+      if (Array.isArray(parsed) && parsed.length > 0) return true;
+    } catch {}
+  }
+
+  if (request.cookies.get("server_token")?.value) return true;
+
+  return false;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -12,8 +26,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const token = request.cookies.get("server_token")?.value;
-  if (!token) {
+  if (!hasValidTokens(request)) {
     if (pathname.startsWith("/api/")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

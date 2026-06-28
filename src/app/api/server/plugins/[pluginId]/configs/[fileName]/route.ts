@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import { getServerToken } from "@/lib/auth";
+import { getServerTokens } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ pluginId: string; fileName: string }> }
 ) {
-  const token = await getServerToken();
-  if (!token) {
+  const tokens = await getServerTokens();
+  if (tokens.length === 0) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -18,7 +18,7 @@ export async function GET(
       fileName: decodeURIComponent(fileName),
       plugin: {
         id: pluginId,
-        server: { token },
+        server: { token: { in: tokens } },
       },
     },
   });
@@ -34,8 +34,8 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ pluginId: string; fileName: string }> }
 ) {
-  const token = await getServerToken();
-  if (!token) {
+  const tokens = await getServerTokens();
+  if (tokens.length === 0) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -52,7 +52,7 @@ export async function PUT(
       fileName: decodeURIComponent(fileName),
       plugin: {
         id: pluginId,
-        server: { token },
+        server: { token: { in: tokens } },
       },
     },
   });

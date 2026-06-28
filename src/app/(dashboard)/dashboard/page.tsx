@@ -31,6 +31,8 @@ interface Server {
   createdAt: string;
 }
 
+const SYNC_INTERVAL = 30;
+
 function StatCard({
   label,
   value,
@@ -63,100 +65,106 @@ function timeAgo(dateStr: string) {
   return `${Math.floor(seconds / 86400)}d ago`;
 }
 
-export default function DashboardPage() {
+function nextSyncSeconds(lastSync: string | null, online: boolean): number | null {
+  if (!online || !lastSync) return null;
+  const elapsed = (Date.now() - new Date(lastSync).getTime()) / 1000;
+  const remaining = SYNC_INTERVAL - (elapsed % SYNC_INTERVAL);
+  return Math.max(0, Math.ceil(remaining));
+}
+
+function formatSyncCountdown(seconds: number | null): string {
+  if (seconds === null) return "--";
+  if (seconds <= 0) return "syncing...";
+  return `${seconds}s`;
+}
+
+function serverNextSync(server: Server): number | null {
+  if (!server.online) return null;
+  const syncs = server.plugins
+    .map((p) => nextSyncSeconds(p.lastSync, true))
+    .filter((s): s is number => s !== null);
+  return syncs.length > 0 ? Math.min(...syncs) : null;
+}
+
+function pluginLabel(type: string) {
+  switch (type) {
+    case "MAGNOX_LOBBY":
+      return "MagnoxLobby";
+    case "MAGNOX_PUNISH":
+      return "MagnoxPunish";
+    default:
+      return type;
+  }
+}
+
+function pluginIcon(type: string) {
+  switch (type) {
+    case "MAGNOX_LOBBY":
+      return "L";
+    case "MAGNOX_PUNISH":
+      return "P";
+    default:
+      return "?";
+  }
+}
+
+function pluginDescription(type: string) {
+  switch (type) {
+    case "MAGNOX_LOBBY":
+      return "Lobby management, cosmetics, server selector, scoreboards, tab list, and more";
+    case "MAGNOX_PUNISH":
+      return "Punishment system — bans, mutes, kicks, warnings, and history tracking";
+    default:
+      return "";
+  }
+}
+
+function tpsColor(tps: number) {
+  if (tps >= 19) return "text-success";
+  if (tps >= 15) return "text-warning";
+  return "text-danger";
+}
+
+function ServerSection({
+  server,
+  onRename,
+  onRemove,
+  showRemove,
+}: {
+  server: Server;
+  onRename: (serverId: string, name: string) => Promise<void>;
+  onRemove: (serverId: string) => Promise<void>;
+  showRemove: boolean;
+}) {
   const router = useRouter();
-  const [server, setServer] = useState<Server | null>(null);
-  const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
-  const [editName, setEditName] = useState("");
+  const [editName, setEditName] = useState(server.name);
   const [saving, setSaving] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const [, setTick] = useState(0);
 
   useEffect(() => {
-    async function fetchServer() {
-      const res = await fetch("/api/server");
-      if (res.ok) {
-        const data = await res.json();
-        setServer(data);
-        if (!editing) setEditName(data.name);
-      }
-      setLoading(false);
-    }
+    const timer = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
-    fetchServer();
-    const interval = setInterval(fetchServer, 10000);
-    return () => clearInterval(interval);
-  }, [editing]);
+  useEffect(() => {
+    if (!editing) setEditName(server.name);
+  }, [server.name, editing]);
 
   async function handleRename() {
     if (!editName.trim()) return;
     setSaving(true);
-    const res = await fetch("/api/server", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: editName.trim() }),
-    });
-    if (res.ok) {
-      const updated = await res.json();
-      setServer((s) => (s ? { ...s, name: updated.name } : null));
-      setEditing(false);
-    }
+    await onRename(server.id, editName.trim());
+    setEditing(false);
     setSaving(false);
   }
 
-  function pluginLabel(type: string) {
-    switch (type) {
-      case "MAGNOX_LOBBY":
-        return "MagnoxLobby";
-      case "MAGNOX_PUNISH":
-        return "MagnoxPunish";
-      default:
-        return type;
-    }
-  }
-
-  function pluginIcon(type: string) {
-    switch (type) {
-      case "MAGNOX_LOBBY":
-        return "L";
-      case "MAGNOX_PUNISH":
-        return "P";
-      default:
-        return "?";
-    }
-  }
-
-  function pluginDescription(type: string) {
-    switch (type) {
-      case "MAGNOX_LOBBY":
-        return "Lobby management, cosmetics, server selector, scoreboards, tab list, and more";
-      case "MAGNOX_PUNISH":
-        return "Punishment system — bans, mutes, kicks, warnings, and history tracking";
-      default:
-        return "";
-    }
-  }
-
-  function tpsColor(tps: number) {
-    if (tps >= 19) return "text-success";
-    if (tps >= 15) return "text-warning";
-    return "text-danger";
-  }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
-      </div>
-    );
-  }
-
-  if (!server) {
-    return (
-      <div className="py-20 text-center text-gray-400">
-        Server not found. Your token may be invalid.
-      </div>
-    );
+  async function handleRemove() {
+    setRemoving(true);
+    await onRemove(server.id);
+    setRemoving(false);
   }
 
   const totalConfigs = server.plugins.reduce(
@@ -167,9 +175,10 @@ export default function DashboardPage() {
     (sum, p) => sum + p.configs.filter((c) => c.pending).length,
     0
   );
+  const nextSync = serverNextSync(server);
 
   return (
-    <div>
+    <div className="rounded-2xl border border-dark-600 bg-dark-900 p-6">
       {/* Server Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
@@ -201,7 +210,7 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-white">{server.name}</h1>
+              <h2 className="text-2xl font-bold text-white">{server.name}</h2>
               <button
                 onClick={() => setEditing(true)}
                 className="rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-dark-600 hover:text-gray-300"
@@ -230,12 +239,23 @@ export default function DashboardPage() {
             </p>
           )}
         </div>
-        <button
-          onClick={() => setShowSetup(!showSetup)}
-          className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent"
-        >
-          {showSetup ? "Hide Setup" : "Setup Guide"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowSetup(!showSetup)}
+            className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent"
+          >
+            {showSetup ? "Hide Setup" : "Setup Guide"}
+          </button>
+          {showRemove && (
+            <button
+              onClick={handleRemove}
+              disabled={removing}
+              className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-danger hover:text-danger disabled:opacity-50"
+            >
+              {removing ? "..." : "Remove"}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Setup Guide */}
@@ -286,7 +306,7 @@ export default function DashboardPage() {
       )}
 
       {/* Stat Cards */}
-      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-5">
         <StatCard
           label="Players"
           value={
@@ -334,11 +354,29 @@ export default function DashboardPage() {
           }
           color={pendingConfigs > 0 ? "text-warning" : "text-success"}
         />
+        <StatCard
+          label="Next Sync"
+          value={server.online ? formatSyncCountdown(nextSync) : "--"}
+          sub={
+            server.online
+              ? nextSync !== null && nextSync <= 0
+                ? "syncing now"
+                : "until plugin polls"
+              : "server offline"
+          }
+          color={
+            !server.online
+              ? "text-gray-500"
+              : nextSync !== null && nextSync <= 5
+                ? "text-accent"
+                : "text-white"
+          }
+        />
       </div>
 
       {/* Plugins */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Plugins</h2>
+        <h3 className="text-lg font-semibold text-white">Plugins</h3>
         <button
           onClick={() => router.push("/dashboard/docs")}
           className="text-xs text-gray-400 transition hover:text-accent"
@@ -366,84 +404,270 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {server.plugins.map((plugin) => (
-            <div
-              key={plugin.id}
-              className="rounded-xl border border-dark-600 bg-dark-800 p-6"
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
-                    {pluginIcon(plugin.type)}
+          {server.plugins.map((plugin) => {
+            const pluginSync = nextSyncSeconds(plugin.lastSync, server.online);
+            return (
+              <div
+                key={plugin.id}
+                className="rounded-xl border border-dark-600 bg-dark-800 p-6"
+              >
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
+                      {pluginIcon(plugin.type)}
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-semibold text-white">
+                        {pluginLabel(plugin.type)}
+                      </h4>
+                      <p className="text-xs text-gray-500">
+                        {pluginDescription(plugin.type)}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-white">
-                      {pluginLabel(plugin.type)}
-                    </h3>
-                    <p className="text-xs text-gray-500">
-                      {pluginDescription(plugin.type)}
+                  <div className="flex items-center gap-3">
+                    {plugin.version && (
+                      <span className="rounded-md bg-dark-600 px-2.5 py-1 text-xs font-medium text-gray-300">
+                        v{plugin.version}
+                      </span>
+                    )}
+                    {plugin.lastSync && (
+                      <span className="text-xs text-gray-500">
+                        Synced {timeAgo(plugin.lastSync)}
+                        {server.online && pluginSync !== null && (
+                          <span className="text-gray-600">
+                            {" · "}next in {formatSyncCountdown(pluginSync)}
+                          </span>
+                        )}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {plugin.configs.length > 0 ? (
+                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {plugin.configs.map((config) => (
+                      <button
+                        key={config.id}
+                        onClick={() =>
+                          router.push(
+                            `/dashboard/config/${plugin.id}?file=${encodeURIComponent(config.fileName)}`
+                          )
+                        }
+                        className="group flex items-center justify-between rounded-lg border border-dark-600 bg-dark-700 px-4 py-3 text-left transition hover:border-accent/30 hover:bg-dark-600"
+                      >
+                        <div className="min-w-0">
+                          <span className="block truncate text-sm font-medium text-white">
+                            {config.name}
+                          </span>
+                          <span className="block truncate text-xs text-gray-500">
+                            {config.fileName}
+                          </span>
+                        </div>
+                        <div className="ml-2 flex shrink-0 items-center gap-2">
+                          {config.pending && (
+                            <span className="h-2 w-2 rounded-full bg-warning" title="Pending changes" />
+                          )}
+                          <span className="text-gray-600 transition group-hover:text-accent">
+                            &rarr;
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-dashed border-dark-500 py-6 text-center">
+                    <p className="text-sm text-gray-500">
+                      Waiting for initial config sync...
+                    </p>
+                    <p className="mt-1 text-xs text-gray-600">
+                      The plugin will push its configs on next restart
                     </p>
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  {plugin.version && (
-                    <span className="rounded-md bg-dark-600 px-2.5 py-1 text-xs font-medium text-gray-300">
-                      v{plugin.version}
-                    </span>
-                  )}
-                  {plugin.lastSync && (
-                    <span className="text-xs text-gray-500">
-                      Synced {timeAgo(plugin.lastSync)}
-                    </span>
-                  )}
-                </div>
+                )}
               </div>
-
-              {plugin.configs.length > 0 ? (
-                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {plugin.configs.map((config) => (
-                    <button
-                      key={config.id}
-                      onClick={() =>
-                        router.push(
-                          `/dashboard/config/${plugin.id}?file=${encodeURIComponent(config.fileName)}`
-                        )
-                      }
-                      className="group flex items-center justify-between rounded-lg border border-dark-600 bg-dark-700 px-4 py-3 text-left transition hover:border-accent/30 hover:bg-dark-600"
-                    >
-                      <div className="min-w-0">
-                        <span className="block truncate text-sm font-medium text-white">
-                          {config.name}
-                        </span>
-                        <span className="block truncate text-xs text-gray-500">
-                          {config.fileName}
-                        </span>
-                      </div>
-                      <div className="ml-2 flex shrink-0 items-center gap-2">
-                        {config.pending && (
-                          <span className="h-2 w-2 rounded-full bg-warning" title="Pending changes" />
-                        )}
-                        <span className="text-gray-600 transition group-hover:text-accent">
-                          &rarr;
-                        </span>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-lg border border-dashed border-dark-500 py-6 text-center">
-                  <p className="text-sm text-gray-500">
-                    Waiting for initial config sync...
-                  </p>
-                  <p className="mt-1 text-xs text-gray-600">
-                    The plugin will push its configs on next restart
-                  </p>
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
+    </div>
+  );
+}
+
+function AddServerForm({
+  onAdd,
+}: {
+  onAdd: (token: string) => Promise<string | null>;
+}) {
+  const [open, setOpen] = useState(false);
+  const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!token.trim()) return;
+    setError("");
+    setLoading(true);
+    const err = await onAdd(token.trim());
+    if (err) {
+      setError(err);
+    } else {
+      setToken("");
+      setOpen(false);
+    }
+    setLoading(false);
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => setOpen(true)}
+        className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-dark-600 bg-dark-900/50 py-8 text-gray-500 transition hover:border-accent/30 hover:text-accent"
+      >
+        <span className="text-2xl">+</span>
+        <span className="text-sm font-medium">Add Server</span>
+      </button>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl border border-dark-600 bg-dark-900 p-6">
+      <h3 className="mb-4 text-lg font-semibold text-white">Add Server</h3>
+      <form onSubmit={handleSubmit} className="flex items-start gap-3">
+        <div className="flex-1">
+          <input
+            type="text"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            className="w-full rounded-lg border border-dark-500 bg-dark-700 px-4 py-2.5 font-mono text-sm text-white placeholder-gray-500 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+            placeholder="Paste server token from plugin config"
+            autoFocus
+          />
+          {error && (
+            <p className="mt-2 text-sm text-danger">{error}</p>
+          )}
+        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition hover:bg-accent-hover disabled:opacity-50"
+        >
+          {loading ? "Adding..." : "Add"}
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setOpen(false);
+            setToken("");
+            setError("");
+          }}
+          className="rounded-lg border border-dark-500 px-4 py-2.5 text-sm text-gray-400 transition hover:text-white"
+        >
+          Cancel
+        </button>
+      </form>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  const router = useRouter();
+  const [servers, setServers] = useState<Server[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchServers() {
+      const res = await fetch("/api/server");
+      if (res.ok) {
+        const data = await res.json();
+        setServers(Array.isArray(data) ? data : [data]);
+      }
+      setLoading(false);
+    }
+
+    fetchServers();
+    const interval = setInterval(fetchServers, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  async function handleRename(serverId: string, name: string) {
+    const res = await fetch("/api/server", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, serverId }),
+    });
+    if (res.ok) {
+      setServers((prev) =>
+        prev.map((s) => (s.id === serverId ? { ...s, name } : s))
+      );
+    }
+  }
+
+  async function handleRemove(serverId: string) {
+    const res = await fetch("/api/auth/token", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ serverId }),
+    });
+    if (res.ok) {
+      const remaining = servers.filter((s) => s.id !== serverId);
+      setServers(remaining);
+      if (remaining.length === 0) {
+        router.push("/login");
+      }
+    }
+  }
+
+  async function handleAddServer(token: string): Promise<string | null> {
+    const res = await fetch("/api/auth/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      return data.error || "Invalid token";
+    }
+    const refreshRes = await fetch("/api/server");
+    if (refreshRes.ok) {
+      const data = await refreshRes.json();
+      setServers(Array.isArray(data) ? data : [data]);
+    }
+    return null;
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (servers.length === 0) {
+    return (
+      <div className="space-y-6">
+        <div className="py-20 text-center text-gray-400">
+          No servers connected. Add a server to get started.
+        </div>
+        <AddServerForm onAdd={handleAddServer} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {servers.map((server) => (
+        <ServerSection
+          key={server.id}
+          server={server}
+          onRename={handleRename}
+          onRemove={handleRemove}
+          showRemove={true}
+        />
+      ))}
+      <AddServerForm onAdd={handleAddServer} />
     </div>
   );
 }
