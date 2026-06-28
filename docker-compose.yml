@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       - DATABASE_URL=postgresql://magnox:magnox@db:5432/magnox
       - JWT_SECRET=${JWT_SECRET:-change-this-to-a-random-secret}
