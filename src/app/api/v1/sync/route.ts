@@ -53,19 +53,27 @@ export async function POST(request: Request) {
     });
 
     for (const config of configs) {
-      await prisma.configFile.upsert({
+      const existing = await prisma.configFile.findUnique({
         where: { pluginId_fileName: { pluginId: plugin.id, fileName: config.fileName } },
-        create: {
-          name: config.name,
-          fileName: config.fileName,
-          content: config.content as object,
-          pluginId: plugin.id,
-        },
-        update: {
-          content: config.content as object,
-          name: config.name,
-        },
       });
+
+      if (existing) {
+        if (!existing.pending) {
+          await prisma.configFile.update({
+            where: { id: existing.id },
+            data: { content: config.content as object, name: config.name },
+          });
+        }
+      } else {
+        await prisma.configFile.create({
+          data: {
+            name: config.name,
+            fileName: config.fileName,
+            content: config.content as object,
+            pluginId: plugin.id,
+          },
+        });
+      }
     }
 
     return NextResponse.json({ ok: true, pluginId: plugin.id });
