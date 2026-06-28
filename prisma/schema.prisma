@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  servers   Server[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Server {
+  id         String    @id @default(cuid())
+  name       String
+  token      String    @unique @default(cuid())
+  address    String?
+  owner      User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId    String
+  plugins    Plugin[]
+  lastSeen   DateTime?
+  online     Boolean   @default(false)
+  players    Int       @default(0)
+  maxPlayers Int       @default(0)
+  tps        Float?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Plugin {
+  id        String       @id @default(cuid())
+  type      PluginType
+  version   String?
+  server    Server       @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  serverId  String
+  configs   ConfigFile[]
+  lastSync  DateTime?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([serverId, type])
+}
+
+enum PluginType {
+  AURO_LOBBY
+  AURO_PUNISH
+}
+
+model ConfigFile {
+  id        String   @id @default(cuid())
+  name      String
+  fileName  String
+  content   Json
+  plugin    Plugin   @relation(fields: [pluginId], references: [id], onDelete: Cascade)
+  pluginId  String
+  pending   Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@unique([pluginId, fileName])
+}

@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark-900: #0a0a0f;
+  --color-dark-800: #12121a;
+  --color-dark-700: #1a1a26;
+  --color-dark-600: #242436;
+  --color-dark-500: #2e2e44;
+  --color-dark-400: #3d3d5c;
+  --color-accent: #7c5cfc;
+  --color-accent-hover: #9478ff;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+}
+
+body {
+  background-color: var(--color-dark-900);
+  color: #e2e8f0;
+}
+
+input, textarea, select {
+  color-scheme: dark;
+}

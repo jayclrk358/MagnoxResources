@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jaycl\\\\Desktop\\\\AuroLobby\" -Recurse -Force | Where-Object { $_.PSIsContainer } | Select-Object FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\jaycl\\\\Desktop\\\\MagnoxWebsite\" -Force | ForEach-Object { $_.FullName })"
+    ]
+  }
+}
