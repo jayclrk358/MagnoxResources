@@ -34,6 +34,11 @@ export async function POST(request: Request) {
       });
     }
 
+    await prisma.server.update({
+      where: { id: server.id },
+      data: { online: true, lastSeen: new Date() },
+    });
+
     const plugin = await prisma.plugin.upsert({
       where: { serverId_type: { serverId: server.id, type } },
       create: {

@@ -15,7 +15,10 @@ export default function DashboardLayout({
     router.push("/login");
   }
 
-  const navItems = [{ href: "/dashboard", label: "Dashboard" }];
+  const navItems = [
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/dashboard/docs", label: "Docs" },
+  ];
 
   return (
     <div className="min-h-screen">
@@ -31,7 +34,7 @@ export default function DashboardLayout({
                   key={item.href}
                   href={item.href}
                   className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                    pathname === item.href
+                    pathname.startsWith(item.href) && (item.href !== "/dashboard" || pathname === "/dashboard")
                       ? "bg-dark-600 text-white"
                       : "text-gray-400 hover:bg-dark-700 hover:text-white"
                   }`}

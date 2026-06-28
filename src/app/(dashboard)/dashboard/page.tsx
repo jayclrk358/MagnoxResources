@@ -34,15 +34,35 @@ export default function DashboardPage() {
   const router = useRouter();
   const [server, setServer] = useState<Server | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetch("/api/server")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         setServer(data);
+        if (data) setEditName(data.name);
         setLoading(false);
       });
   }, []);
+
+  async function handleRename() {
+    if (!editName.trim()) return;
+    setSaving(true);
+    const res = await fetch("/api/server", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: editName.trim() }),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setServer((s) => (s ? { ...s, name: updated.name } : null));
+      setEditing(false);
+    }
+    setSaving(false);
+  }
 
   function pluginLabel(type: string) {
     switch (type) {
@@ -88,23 +108,58 @@ export default function DashboardPage() {
       <div className="mb-8 rounded-xl border border-dark-600 bg-dark-800 p-6">
         <div className="flex items-center justify-between">
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-white">{server.name}</h1>
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  server.online
-                    ? "bg-success/10 text-success"
-                    : "bg-gray-500/10 text-gray-400"
-                }`}
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    server.online ? "bg-success" : "bg-gray-500"
-                  }`}
+            {editing ? (
+              <div className="flex items-center gap-3">
+                <input
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleRename()}
+                  className="rounded-lg border border-dark-500 bg-dark-700 px-3 py-1.5 text-lg font-bold text-white focus:border-accent focus:outline-none"
+                  autoFocus
                 />
-                {server.online ? "Online" : "Offline"}
-              </span>
-            </div>
+                <button
+                  onClick={handleRename}
+                  disabled={saving}
+                  className="rounded-lg bg-accent px-3 py-1.5 text-sm text-white hover:bg-accent-hover disabled:opacity-50"
+                >
+                  {saving ? "..." : "Save"}
+                </button>
+                <button
+                  onClick={() => {
+                    setEditing(false);
+                    setEditName(server.name);
+                  }}
+                  className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 hover:text-white"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-bold text-white">{server.name}</h1>
+                <button
+                  onClick={() => setEditing(true)}
+                  className="rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-dark-600 hover:text-gray-300"
+                  title="Rename server"
+                >
+                  Rename
+                </button>
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    server.online
+                      ? "bg-success/10 text-success"
+                      : "bg-gray-500/10 text-gray-400"
+                  }`}
+                >
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${
+                      server.online ? "bg-success" : "bg-gray-500"
+                    }`}
+                  />
+                  {server.online ? "Online" : "Offline"}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
