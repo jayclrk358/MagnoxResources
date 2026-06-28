@@ -66,10 +66,10 @@ export default function DashboardPage() {
 
   function pluginLabel(type: string) {
     switch (type) {
-      case "AURO_LOBBY":
-        return "AuroLobby";
-      case "AURO_PUNISH":
-        return "AuroPunish";
+      case "MAGNOX_LOBBY":
+        return "MagnoxLobby";
+      case "MAGNOX_PUNISH":
+        return "MagnoxPunish";
       default:
         return type;
     }
@@ -77,9 +77,9 @@ export default function DashboardPage() {
 
   function pluginDescription(type: string) {
     switch (type) {
-      case "AURO_LOBBY":
+      case "MAGNOX_LOBBY":
         return "Lobby management, cosmetics, server selector, and more";
-      case "AURO_PUNISH":
+      case "MAGNOX_PUNISH":
         return "Punishment system with bans, mutes, kicks, and warnings";
       default:
         return "";

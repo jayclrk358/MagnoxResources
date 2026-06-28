@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "PluginType" AS ENUM ('AURO_LOBBY', 'AURO_PUNISH');
+CREATE TYPE "PluginType" AS ENUM ('MAGNOX_LOBBY', 'MAGNOX_PUNISH');
 
 -- CreateTable
 CREATE TABLE "Server" (

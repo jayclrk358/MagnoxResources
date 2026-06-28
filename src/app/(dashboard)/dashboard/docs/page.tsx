@@ -94,8 +94,8 @@ export default function DocsPage() {
 
   const tabs = [
     { id: "placeholders", label: "Placeholders" },
-    { id: "aurolobby", label: "AuroLobby" },
-    { id: "auropunish", label: "AuroPunish" },
+    { id: "magnoxlobby", label: "MagnoxLobby" },
+    { id: "magnoxpunish", label: "MagnoxPunish" },
     { id: "api", label: "Plugin API" },
   ];
 
@@ -133,7 +133,7 @@ export default function DocsPage() {
               Built-in Placeholders
             </h2>
             <p className="mb-4 text-sm text-gray-400">
-              Available in all AuroLobby config files. No plugins required.
+              Available in all MagnoxLobby config files. No plugins required.
             </p>
             <div className="space-y-2">
               <Placeholder name="{player}" description="Player's display name" />
@@ -195,7 +195,7 @@ export default function DocsPage() {
               MiniMessage Formatting
             </h2>
             <p className="mb-4 text-sm text-gray-400">
-              AuroLobby supports MiniMessage tags for rich text formatting in
+              MagnoxLobby supports MiniMessage tags for rich text formatting in
               all config values. Legacy <code className="text-gray-300">&amp;c</code>{" "}
               color codes are also supported.
             </p>
@@ -215,11 +215,11 @@ export default function DocsPage() {
         </div>
       )}
 
-      {/* AuroLobby Tab */}
-      {activeTab === "aurolobby" && (
+      {/* MagnoxLobby Tab */}
+      {activeTab === "magnoxlobby" && (
         <div className="space-y-4">
           <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-            <h2 className="mb-1 text-lg font-semibold text-white">AuroLobby</h2>
+            <h2 className="mb-1 text-lg font-semibold text-white">MagnoxLobby</h2>
             <p className="text-sm text-gray-400">
               A comprehensive lobby management plugin for Paper 1.21.4+. Manage
               spawn, protection, cosmetics, server selectors, and more.
@@ -323,12 +323,12 @@ export default function DocsPage() {
           <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
             <h3 className="mb-2 text-sm font-semibold text-white">Permissions</h3>
             <div className="space-y-2">
-              <Placeholder name="aurolobby.admin" description="Access to /aurolobby reload" />
-              <Placeholder name="aurolobby.spawn.set" description="Set the lobby spawn point" />
-              <Placeholder name="aurolobby.spawn.teleport" description="Teleport to spawn" />
-              <Placeholder name="aurolobby.doublejump" description="Use double jump" />
-              <Placeholder name="aurolobby.visibility" description="Toggle player visibility" />
-              <Placeholder name="aurolobby.cosmetic.*" description="Access all cosmetics" />
+              <Placeholder name="magnoxlobby.admin" description="Access to /magnoxlobby reload" />
+              <Placeholder name="magnoxlobby.spawn.set" description="Set the lobby spawn point" />
+              <Placeholder name="magnoxlobby.spawn.teleport" description="Teleport to spawn" />
+              <Placeholder name="magnoxlobby.doublejump" description="Use double jump" />
+              <Placeholder name="magnoxlobby.visibility" description="Toggle player visibility" />
+              <Placeholder name="magnoxlobby.cosmetic.*" description="Access all cosmetics" />
             </div>
           </div>
 
@@ -337,17 +337,17 @@ export default function DocsPage() {
             <div className="space-y-2">
               <Placeholder name="/spawn" description="Teleport to the lobby spawn point" />
               <Placeholder name="/setspawn" description="Set the lobby spawn to your current location" />
-              <Placeholder name="/aurolobby reload" description="Reload all configuration files" />
+              <Placeholder name="/magnoxlobby reload" description="Reload all configuration files" />
             </div>
           </div>
         </div>
       )}
 
-      {/* AuroPunish Tab */}
-      {activeTab === "auropunish" && (
+      {/* MagnoxPunish Tab */}
+      {activeTab === "magnoxpunish" && (
         <div className="space-y-4">
           <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-            <h2 className="mb-1 text-lg font-semibold text-white">AuroPunish</h2>
+            <h2 className="mb-1 text-lg font-semibold text-white">MagnoxPunish</h2>
             <p className="text-sm text-gray-400">
               A punishment management system for Velocity proxies. Supports
               bans, temp bans, mutes, temp mutes, kicks, warnings, and full
@@ -365,7 +365,7 @@ export default function DocsPage() {
           <ConfigFileCard
             name="Config"
             fileName="config.toml"
-            description="Main configuration file for AuroPunish. Database connection, messages, and panel settings."
+            description="Main configuration file for MagnoxPunish. Database connection, messages, and panel settings."
             keys={["database.type", "database.host", "database.port", "database.database", "database.username", "database.password", "database.pool-size", "general.prefix", "general.date-format", "general.history-limit", "panel.enabled", "panel.url", "panel.token"]}
           />
 
@@ -462,25 +462,25 @@ export default function DocsPage() {
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-xs font-medium text-gray-400">Request Body</span>
                 <CopyButton text={`{
-  "pluginType": "AURO_LOBBY",
+  "pluginType": "MAGNOX_LOBBY",
   "version": "1.0.0",
   "configs": [
     {
       "fileName": "settings.yml",
       "name": "settings",
-      "content": { "prefix": "&6[AuroLobby] &r" }
+      "content": { "prefix": "&6[MagnoxLobby] &r" }
     }
   ]
 }`} />
               </div>
               <pre className="overflow-x-auto text-xs text-gray-300">{`{
-  "pluginType": "AURO_LOBBY",
+  "pluginType": "MAGNOX_LOBBY",
   "version": "1.0.0",
   "configs": [
     {
       "fileName": "settings.yml",
       "name": "settings",
-      "content": { "prefix": "&6[AuroLobby] &r" }
+      "content": { "prefix": "&6[MagnoxLobby] &r" }
     }
   ]
 }`}</pre>
@@ -494,7 +494,7 @@ export default function DocsPage() {
             </p>
             <div className="rounded-lg bg-dark-900 p-4">
               <span className="text-xs font-medium text-gray-400">Query Parameter</span>
-              <pre className="mt-1 text-xs text-gray-300">{`?pluginType=AURO_LOBBY`}</pre>
+              <pre className="mt-1 text-xs text-gray-300">{`?pluginType=MAGNOX_LOBBY`}</pre>
             </div>
             <div className="mt-3 rounded-lg bg-dark-900 p-4">
               <span className="text-xs font-medium text-gray-400">Response</span>
@@ -535,7 +535,7 @@ export default function DocsPage() {
   "serverId": "clx...",
   "serverName": "My Server",
   "plugins": [
-    { "id": "clx...", "type": "AURO_LOBBY", "version": "1.0.0" }
+    { "id": "clx...", "type": "MAGNOX_LOBBY", "version": "1.0.0" }
   ]
 }`}</pre>
             </div>

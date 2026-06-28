@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "MagnoxResources",
-  description: "Configuration panel for Aurorionz plugins",
+  description: "Configuration panel for Magnox plugins",
 };
 
 export default function RootLayout({

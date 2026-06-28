@@ -78,13 +78,13 @@ export default function LoginPage() {
         </p>
         <ul className="mt-2 space-y-1">
           <li>
-            <span className="text-accent">AuroLobby:</span>{" "}
-            <code className="text-gray-300">plugins/AuroLobby/settings.yml</code>{" "}
+            <span className="text-accent">MagnoxLobby:</span>{" "}
+            <code className="text-gray-300">plugins/MagnoxLobby/settings.yml</code>{" "}
             &rarr; <code className="text-gray-300">panel.token</code>
           </li>
           <li>
-            <span className="text-accent">AuroPunish:</span>{" "}
-            <code className="text-gray-300">plugins/auropunish/config.toml</code>{" "}
+            <span className="text-accent">MagnoxPunish:</span>{" "}
+            <code className="text-gray-300">plugins/magnoxpunish/config.toml</code>{" "}
             &rarr; <code className="text-gray-300">[panel] token</code>
           </li>
         </ul>

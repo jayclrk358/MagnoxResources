@@ -36,8 +36,8 @@ model Plugin {
 }
 
 enum PluginType {
-  AURO_LOBBY
-  AURO_PUNISH
+  MAGNOX_LOBBY
+  MAGNOX_PUNISH
 }
 
 model ConfigFile {
