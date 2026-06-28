@@ -225,7 +225,7 @@ export default function DocsPage() {
               spawn, protection, cosmetics, server selectors, and more.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              {["Spawn Management", "World Protection", "Double Jump", "Scoreboard", "Tab List", "Hotbar Items", "Server Selector", "Cosmetics", "Chat Formatting", "NPC Hooks", "Gadgets", "Player Visibility"].map((f) => (
+              {["Spawn Management", "World Protection", "Double Jump", "Scoreboard", "Tab List", "Hotbar Items", "Server Selector", "Cosmetics", "Chat Formatting", "NPC Hooks", "Gadgets", "Player Visibility", "Announcements", "Fly", "Vanish", "Multi-Database"].map((f) => (
                 <span key={f} className="rounded-full bg-dark-600 px-3 py-1 text-xs text-gray-300">
                   {f}
                 </span>
@@ -238,8 +238,8 @@ export default function DocsPage() {
           <ConfigFileCard
             name="Settings"
             fileName="settings.yml"
-            description="Main plugin configuration. Panel connection, message prefix."
-            keys={["prefix", "panel.enabled", "panel.url", "panel.token", "panel.sync-interval", "panel.heartbeat-interval"]}
+            description="Main plugin configuration. Message prefix and panel token."
+            keys={["prefix", "panel.token"]}
           />
           <ConfigFileCard
             name="Spawn"
@@ -311,7 +311,7 @@ export default function DocsPage() {
             name="Messages"
             fileName="configs/messages.yml"
             description="All player-facing messages and notifications."
-            keys={["no-permission", "spawn-set", "spawn-teleport", "visibility-hidden", "visibility-shown", "cosmetic-equipped", "cosmetic-unequipped", "cosmetic-no-permission", "cooldown-active", "config-reloaded"]}
+            keys={["no-permission", "spawn-set", "spawn-teleport", "visibility-hidden", "visibility-shown", "cosmetic-equipped", "cosmetic-unequipped", "cosmetic-no-permission", "cooldown-active", "config-reloaded", "fly-enabled", "fly-disabled", "vanish-enabled", "vanish-disabled"]}
           />
           <ConfigFileCard
             name="Hooks"
@@ -319,13 +319,27 @@ export default function DocsPage() {
             description="NPC click actions for FancyNpcs integration."
             keys={["npc-actions.{name}.action", "npc-actions.{name}.data"]}
           />
+          <ConfigFileCard
+            name="Announcements"
+            fileName="configs/announcements.yml"
+            description="Auto-broadcast messages to all players on a timed interval."
+            keys={["enabled", "interval-seconds", "messages"]}
+          />
+          <ConfigFileCard
+            name="Database"
+            fileName="configs/database.yml"
+            description="Database backend for player data. Supports SQLite, MySQL, MariaDB, PostgreSQL, and MongoDB."
+            keys={["type", "sqlite.file", "mysql.host", "mysql.port", "mysql.database", "mysql.username", "mysql.password", "mysql.pool-size", "mariadb.*", "postgresql.*", "mongodb.connection-string", "mongodb.database"]}
+          />
 
           <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
             <h3 className="mb-2 text-sm font-semibold text-white">Permissions</h3>
             <div className="space-y-2">
-              <Placeholder name="magnoxlobby.admin" description="Access to /magnoxlobby reload" />
-              <Placeholder name="magnoxlobby.spawn.set" description="Set the lobby spawn point" />
-              <Placeholder name="magnoxlobby.spawn.teleport" description="Teleport to spawn" />
+              <Placeholder name="magnoxlobby.admin" description="Access to /magnoxlobby reload, version, and help" />
+              <Placeholder name="magnoxlobby.admin.setspawn" description="Set the lobby spawn point" />
+              <Placeholder name="magnoxlobby.admin.build" description="Bypass build protection in the lobby" />
+              <Placeholder name="magnoxlobby.fly" description="Toggle flight mode with /fly" />
+              <Placeholder name="magnoxlobby.vanish" description="Toggle vanish mode with /vanish" />
               <Placeholder name="magnoxlobby.doublejump" description="Use double jump" />
               <Placeholder name="magnoxlobby.visibility" description="Toggle player visibility" />
               <Placeholder name="magnoxlobby.cosmetic.*" description="Access all cosmetics" />
@@ -337,7 +351,11 @@ export default function DocsPage() {
             <div className="space-y-2">
               <Placeholder name="/spawn" description="Teleport to the lobby spawn point" />
               <Placeholder name="/setspawn" description="Set the lobby spawn to your current location" />
+              <Placeholder name="/fly" description="Toggle flight mode on/off" />
+              <Placeholder name="/vanish" description="Toggle vanish — hide from all other players" />
               <Placeholder name="/magnoxlobby reload" description="Reload all configuration files" />
+              <Placeholder name="/magnoxlobby version" description="Show the plugin version" />
+              <Placeholder name="/magnoxlobby help" description="List all available commands" />
             </div>
           </div>
         </div>

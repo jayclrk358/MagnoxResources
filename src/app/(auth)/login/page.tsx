@@ -73,8 +73,8 @@ export default function LoginPage() {
       <div className="mt-6 rounded-lg bg-dark-700 p-4 text-xs text-gray-400">
         <p className="font-medium text-gray-300">Where do I find my token?</p>
         <p className="mt-1">
-          Your token is automatically generated when your plugin first starts
-          with the panel enabled. Find it in:
+          Your token is automatically generated when your plugin first starts.
+          Find it in:
         </p>
         <ul className="mt-2 space-y-1">
           <li>
