@@ -39,14 +39,20 @@ export default function DashboardPage() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch("/api/server")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
+    async function fetchServer() {
+      const res = await fetch("/api/server");
+      if (res.ok) {
+        const data = await res.json();
         setServer(data);
-        if (data) setEditName(data.name);
-        setLoading(false);
-      });
-  }, []);
+        if (!editing) setEditName(data.name);
+      }
+      setLoading(false);
+    }
+
+    fetchServer();
+    const interval = setInterval(fetchServer, 10000);
+    return () => clearInterval(interval);
+  }, [editing]);
 
   async function handleRename() {
     if (!editName.trim()) return;
