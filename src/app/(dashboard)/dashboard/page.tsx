@@ -127,14 +127,16 @@ function tpsColor(tps: number) {
 
 function ServerSection({
   server,
+  collapsed,
+  onToggleCollapse,
   onRename,
   onRemove,
-  showRemove,
 }: {
   server: Server;
+  collapsed: boolean;
+  onToggleCollapse: () => void;
   onRename: (serverId: string, name: string) => Promise<void>;
   onRemove: (serverId: string) => Promise<void>;
-  showRemove: boolean;
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
@@ -145,9 +147,10 @@ function ServerSection({
   const [, setTick] = useState(0);
 
   useEffect(() => {
+    if (collapsed) return;
     const timer = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [collapsed]);
 
   useEffect(() => {
     if (!editing) setEditName(server.name);
@@ -179,316 +182,347 @@ function ServerSection({
 
   return (
     <div className="rounded-2xl border border-dark-600 bg-dark-900 p-6">
-      {/* Server Header */}
-      <div className="mb-6 flex items-start justify-between">
-        <div>
-          {editing ? (
-            <div className="flex items-center gap-3">
-              <input
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleRename()}
-                className="rounded-lg border border-dark-500 bg-dark-700 px-3 py-1.5 text-2xl font-bold text-white focus:border-accent focus:outline-none"
-                autoFocus
-              />
+      {/* Server Header — always visible */}
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleCollapse}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition hover:bg-dark-700 hover:text-white"
+            title={collapsed ? "Expand" : "Minimize"}
+          >
+            <svg
+              className={`h-4 w-4 transition-transform ${collapsed ? "-rotate-90" : ""}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div>
+            {editing ? (
+              <div className="flex items-center gap-3">
+                <input
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleRename()}
+                  className="rounded-lg border border-dark-500 bg-dark-700 px-3 py-1.5 text-2xl font-bold text-white focus:border-accent focus:outline-none"
+                  autoFocus
+                />
+                <button
+                  onClick={handleRename}
+                  disabled={saving}
+                  className="rounded-lg bg-accent px-3 py-1.5 text-sm text-white hover:bg-accent-hover disabled:opacity-50"
+                >
+                  {saving ? "..." : "Save"}
+                </button>
+                <button
+                  onClick={() => {
+                    setEditing(false);
+                    setEditName(server.name);
+                  }}
+                  className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 hover:text-white"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl font-bold text-white">{server.name}</h2>
+                <button
+                  onClick={() => setEditing(true)}
+                  className="rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-dark-600 hover:text-gray-300"
+                >
+                  Rename
+                </button>
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    server.online
+                      ? "bg-success/10 text-success"
+                      : "bg-gray-500/10 text-gray-400"
+                  }`}
+                >
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${
+                      server.online ? "bg-success" : "bg-gray-500"
+                    }`}
+                  />
+                  {server.online ? "Online" : "Offline"}
+                </span>
+                {collapsed && server.online && (
+                  <span className="text-xs text-gray-500">
+                    {server.players}/{server.maxPlayers} players
+                    {server.plugins.length > 0 && ` · ${server.plugins.length} plugins`}
+                    {pendingConfigs > 0 && (
+                      <span className="text-warning"> · {pendingConfigs} pending</span>
+                    )}
+                  </span>
+                )}
+              </div>
+            )}
+            {!collapsed && server.lastSeen && (
+              <p className="mt-1 text-xs text-gray-500">
+                Last activity: {timeAgo(server.lastSeen)}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {!collapsed && (
+            <button
+              onClick={() => setShowSetup(!showSetup)}
+              className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent"
+            >
+              {showSetup ? "Hide Setup" : "Setup Guide"}
+            </button>
+          )}
+          <button
+            onClick={handleRemove}
+            disabled={removing}
+            className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-danger hover:text-danger disabled:opacity-50"
+          >
+            {removing ? "..." : "Remove"}
+          </button>
+        </div>
+      </div>
+
+      {/* Collapsible content */}
+      {!collapsed && (
+        <>
+          {/* Setup Guide */}
+          {showSetup && (
+            <div className="mt-6 rounded-xl border border-accent/20 bg-accent/5 p-6">
+              <h3 className="mb-3 text-sm font-semibold text-accent">
+                Quick Setup Guide
+              </h3>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="rounded-lg bg-dark-800 p-4">
+                  <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
+                    1
+                  </div>
+                  <h4 className="mb-1 text-sm font-medium text-white">
+                    Install Plugin
+                  </h4>
+                  <p className="text-xs text-gray-400">
+                    Drop the MagnoxLobby or MagnoxPunish JAR into your server&apos;s{" "}
+                    <code className="text-gray-300">plugins/</code> folder and restart.
+                  </p>
+                </div>
+                <div className="rounded-lg bg-dark-800 p-4">
+                  <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
+                    2
+                  </div>
+                  <h4 className="mb-1 text-sm font-medium text-white">
+                    Enable Panel
+                  </h4>
+                  <p className="text-xs text-gray-400">
+                    Set <code className="text-gray-300">panel.enabled: true</code>{" "}
+                    in the plugin&apos;s config file and restart. A token is auto-generated.
+                  </p>
+                </div>
+                <div className="rounded-lg bg-dark-800 p-4">
+                  <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
+                    3
+                  </div>
+                  <h4 className="mb-1 text-sm font-medium text-white">
+                    Enter Token
+                  </h4>
+                  <p className="text-xs text-gray-400">
+                    Copy the token from your plugin config and enter it on this
+                    panel. Your configs will appear automatically.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Stat Cards */}
+          <div className="mt-6 mb-8 grid grid-cols-2 gap-4 md:grid-cols-5">
+            <StatCard
+              label="Players"
+              value={
+                server.online
+                  ? `${server.players}/${server.maxPlayers}`
+                  : "--"
+              }
+              sub={server.online ? "currently online" : "server offline"}
+              color={server.online ? "text-white" : "text-gray-500"}
+            />
+            <StatCard
+              label="TPS"
+              value={
+                server.online && server.tps !== null
+                  ? server.tps.toFixed(1)
+                  : "--"
+              }
+              sub={
+                server.online && server.tps !== null
+                  ? server.tps >= 19
+                    ? "healthy"
+                    : server.tps >= 15
+                      ? "moderate lag"
+                      : "severe lag"
+                  : "no data"
+              }
+              color={
+                server.online && server.tps !== null
+                  ? tpsColor(server.tps)
+                  : "text-gray-500"
+              }
+            />
+            <StatCard
+              label="Plugins"
+              value={String(server.plugins.length)}
+              sub={`${totalConfigs} config files`}
+            />
+            <StatCard
+              label="Pending"
+              value={String(pendingConfigs)}
+              sub={
+                pendingConfigs > 0
+                  ? "changes awaiting sync"
+                  : "all synced"
+              }
+              color={pendingConfigs > 0 ? "text-warning" : "text-success"}
+            />
+            <StatCard
+              label="Next Sync"
+              value={server.online ? formatSyncCountdown(nextSync) : "--"}
+              sub={
+                server.online
+                  ? nextSync !== null && nextSync <= 0
+                    ? "syncing now"
+                    : "until plugin polls"
+                  : "server offline"
+              }
+              color={
+                !server.online
+                  ? "text-gray-500"
+                  : nextSync !== null && nextSync <= 5
+                    ? "text-accent"
+                    : "text-white"
+              }
+            />
+          </div>
+
+          {/* Plugins */}
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-white">Plugins</h3>
+            <button
+              onClick={() => router.push("/dashboard/docs")}
+              className="text-xs text-gray-400 transition hover:text-accent"
+            >
+              View Documentation &rarr;
+            </button>
+          </div>
+
+          {server.plugins.length === 0 ? (
+            <div className="rounded-xl border border-dark-600 bg-dark-800 py-12 text-center">
+              <div className="mb-3 text-4xl text-gray-600">+</div>
+              <h3 className="text-base font-semibold text-white">
+                No plugins connected yet
+              </h3>
+              <p className="mx-auto mt-2 max-w-md text-sm text-gray-400">
+                Enable the panel in your plugin config, restart the server, and
+                the plugin will automatically register itself here.
+              </p>
               <button
-                onClick={handleRename}
-                disabled={saving}
-                className="rounded-lg bg-accent px-3 py-1.5 text-sm text-white hover:bg-accent-hover disabled:opacity-50"
+                onClick={() => setShowSetup(true)}
+                className="mt-4 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-hover"
               >
-                {saving ? "..." : "Save"}
-              </button>
-              <button
-                onClick={() => {
-                  setEditing(false);
-                  setEditName(server.name);
-                }}
-                className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 hover:text-white"
-              >
-                Cancel
+                View Setup Guide
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-bold text-white">{server.name}</h2>
-              <button
-                onClick={() => setEditing(true)}
-                className="rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-dark-600 hover:text-gray-300"
-              >
-                Rename
-              </button>
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                  server.online
-                    ? "bg-success/10 text-success"
-                    : "bg-gray-500/10 text-gray-400"
-                }`}
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    server.online ? "bg-success" : "bg-gray-500"
-                  }`}
-                />
-                {server.online ? "Online" : "Offline"}
-              </span>
-            </div>
-          )}
-          {server.lastSeen && (
-            <p className="mt-1 text-xs text-gray-500">
-              Last activity: {timeAgo(server.lastSeen)}
-            </p>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowSetup(!showSetup)}
-            className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent"
-          >
-            {showSetup ? "Hide Setup" : "Setup Guide"}
-          </button>
-          {showRemove && (
-            <button
-              onClick={handleRemove}
-              disabled={removing}
-              className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-danger hover:text-danger disabled:opacity-50"
-            >
-              {removing ? "..." : "Remove"}
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Setup Guide */}
-      {showSetup && (
-        <div className="mb-6 rounded-xl border border-accent/20 bg-accent/5 p-6">
-          <h3 className="mb-3 text-sm font-semibold text-accent">
-            Quick Setup Guide
-          </h3>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-lg bg-dark-800 p-4">
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
-                1
-              </div>
-              <h4 className="mb-1 text-sm font-medium text-white">
-                Install Plugin
-              </h4>
-              <p className="text-xs text-gray-400">
-                Drop the MagnoxLobby or MagnoxPunish JAR into your server&apos;s{" "}
-                <code className="text-gray-300">plugins/</code> folder and restart.
-              </p>
-            </div>
-            <div className="rounded-lg bg-dark-800 p-4">
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
-                2
-              </div>
-              <h4 className="mb-1 text-sm font-medium text-white">
-                Enable Panel
-              </h4>
-              <p className="text-xs text-gray-400">
-                Set <code className="text-gray-300">panel.enabled: true</code>{" "}
-                in the plugin&apos;s config file and restart. A token is auto-generated.
-              </p>
-            </div>
-            <div className="rounded-lg bg-dark-800 p-4">
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent">
-                3
-              </div>
-              <h4 className="mb-1 text-sm font-medium text-white">
-                Enter Token
-              </h4>
-              <p className="text-xs text-gray-400">
-                Copy the token from your plugin config and enter it on this
-                panel. Your configs will appear automatically.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Stat Cards */}
-      <div className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-5">
-        <StatCard
-          label="Players"
-          value={
-            server.online
-              ? `${server.players}/${server.maxPlayers}`
-              : "--"
-          }
-          sub={server.online ? "currently online" : "server offline"}
-          color={server.online ? "text-white" : "text-gray-500"}
-        />
-        <StatCard
-          label="TPS"
-          value={
-            server.online && server.tps !== null
-              ? server.tps.toFixed(1)
-              : "--"
-          }
-          sub={
-            server.online && server.tps !== null
-              ? server.tps >= 19
-                ? "healthy"
-                : server.tps >= 15
-                  ? "moderate lag"
-                  : "severe lag"
-              : "no data"
-          }
-          color={
-            server.online && server.tps !== null
-              ? tpsColor(server.tps)
-              : "text-gray-500"
-          }
-        />
-        <StatCard
-          label="Plugins"
-          value={String(server.plugins.length)}
-          sub={`${totalConfigs} config files`}
-        />
-        <StatCard
-          label="Pending"
-          value={String(pendingConfigs)}
-          sub={
-            pendingConfigs > 0
-              ? "changes awaiting sync"
-              : "all synced"
-          }
-          color={pendingConfigs > 0 ? "text-warning" : "text-success"}
-        />
-        <StatCard
-          label="Next Sync"
-          value={server.online ? formatSyncCountdown(nextSync) : "--"}
-          sub={
-            server.online
-              ? nextSync !== null && nextSync <= 0
-                ? "syncing now"
-                : "until plugin polls"
-              : "server offline"
-          }
-          color={
-            !server.online
-              ? "text-gray-500"
-              : nextSync !== null && nextSync <= 5
-                ? "text-accent"
-                : "text-white"
-          }
-        />
-      </div>
-
-      {/* Plugins */}
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-white">Plugins</h3>
-        <button
-          onClick={() => router.push("/dashboard/docs")}
-          className="text-xs text-gray-400 transition hover:text-accent"
-        >
-          View Documentation &rarr;
-        </button>
-      </div>
-
-      {server.plugins.length === 0 ? (
-        <div className="rounded-xl border border-dark-600 bg-dark-800 py-12 text-center">
-          <div className="mb-3 text-4xl text-gray-600">+</div>
-          <h3 className="text-base font-semibold text-white">
-            No plugins connected yet
-          </h3>
-          <p className="mx-auto mt-2 max-w-md text-sm text-gray-400">
-            Enable the panel in your plugin config, restart the server, and
-            the plugin will automatically register itself here.
-          </p>
-          <button
-            onClick={() => setShowSetup(true)}
-            className="mt-4 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-hover"
-          >
-            View Setup Guide
-          </button>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {server.plugins.map((plugin) => {
-            const pluginSync = nextSyncSeconds(plugin.lastSync, server.online);
-            return (
-              <div
-                key={plugin.id}
-                className="rounded-xl border border-dark-600 bg-dark-800 p-6"
-              >
-                <div className="mb-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
-                      {pluginIcon(plugin.type)}
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-semibold text-white">
-                        {pluginLabel(plugin.type)}
-                      </h4>
-                      <p className="text-xs text-gray-500">
-                        {pluginDescription(plugin.type)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {plugin.version && (
-                      <span className="rounded-md bg-dark-600 px-2.5 py-1 text-xs font-medium text-gray-300">
-                        v{plugin.version}
-                      </span>
-                    )}
-                    {plugin.lastSync && (
-                      <span className="text-xs text-gray-500">
-                        Synced {timeAgo(plugin.lastSync)}
-                        {server.online && pluginSync !== null && (
-                          <span className="text-gray-600">
-                            {" · "}next in {formatSyncCountdown(pluginSync)}
+            <div className="space-y-4">
+              {server.plugins.map((plugin) => {
+                const pluginSync = nextSyncSeconds(plugin.lastSync, server.online);
+                return (
+                  <div
+                    key={plugin.id}
+                    className="rounded-xl border border-dark-600 bg-dark-800 p-6"
+                  >
+                    <div className="mb-4 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
+                          {pluginIcon(plugin.type)}
+                        </div>
+                        <div>
+                          <h4 className="text-lg font-semibold text-white">
+                            {pluginLabel(plugin.type)}
+                          </h4>
+                          <p className="text-xs text-gray-500">
+                            {pluginDescription(plugin.type)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        {plugin.version && (
+                          <span className="rounded-md bg-dark-600 px-2.5 py-1 text-xs font-medium text-gray-300">
+                            v{plugin.version}
                           </span>
                         )}
-                      </span>
+                        {plugin.lastSync && (
+                          <span className="text-xs text-gray-500">
+                            Synced {timeAgo(plugin.lastSync)}
+                            {server.online && pluginSync !== null && (
+                              <span className="text-gray-600">
+                                {" · "}next in {formatSyncCountdown(pluginSync)}
+                              </span>
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {plugin.configs.length > 0 ? (
+                      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                        {plugin.configs.map((config) => (
+                          <button
+                            key={config.id}
+                            onClick={() =>
+                              router.push(
+                                `/dashboard/config/${plugin.id}?file=${encodeURIComponent(config.fileName)}`
+                              )
+                            }
+                            className="group flex items-center justify-between rounded-lg border border-dark-600 bg-dark-700 px-4 py-3 text-left transition hover:border-accent/30 hover:bg-dark-600"
+                          >
+                            <div className="min-w-0">
+                              <span className="block truncate text-sm font-medium text-white">
+                                {config.name}
+                              </span>
+                              <span className="block truncate text-xs text-gray-500">
+                                {config.fileName}
+                              </span>
+                            </div>
+                            <div className="ml-2 flex shrink-0 items-center gap-2">
+                              {config.pending && (
+                                <span className="h-2 w-2 rounded-full bg-warning" title="Pending changes" />
+                              )}
+                              <span className="text-gray-600 transition group-hover:text-accent">
+                                &rarr;
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="rounded-lg border border-dashed border-dark-500 py-6 text-center">
+                        <p className="text-sm text-gray-500">
+                          Waiting for initial config sync...
+                        </p>
+                        <p className="mt-1 text-xs text-gray-600">
+                          The plugin will push its configs on next restart
+                        </p>
+                      </div>
                     )}
                   </div>
-                </div>
-
-                {plugin.configs.length > 0 ? (
-                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                    {plugin.configs.map((config) => (
-                      <button
-                        key={config.id}
-                        onClick={() =>
-                          router.push(
-                            `/dashboard/config/${plugin.id}?file=${encodeURIComponent(config.fileName)}`
-                          )
-                        }
-                        className="group flex items-center justify-between rounded-lg border border-dark-600 bg-dark-700 px-4 py-3 text-left transition hover:border-accent/30 hover:bg-dark-600"
-                      >
-                        <div className="min-w-0">
-                          <span className="block truncate text-sm font-medium text-white">
-                            {config.name}
-                          </span>
-                          <span className="block truncate text-xs text-gray-500">
-                            {config.fileName}
-                          </span>
-                        </div>
-                        <div className="ml-2 flex shrink-0 items-center gap-2">
-                          {config.pending && (
-                            <span className="h-2 w-2 rounded-full bg-warning" title="Pending changes" />
-                          )}
-                          <span className="text-gray-600 transition group-hover:text-accent">
-                            &rarr;
-                          </span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="rounded-lg border border-dashed border-dark-500 py-6 text-center">
-                    <p className="text-sm text-gray-500">
-                      Waiting for initial config sync...
-                    </p>
-                    <p className="mt-1 text-xs text-gray-600">
-                      The plugin will push its configs on next restart
-                    </p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
@@ -523,7 +557,7 @@ function AddServerForm({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-dark-600 bg-dark-900/50 py-8 text-gray-500 transition hover:border-accent/30 hover:text-accent"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-dark-600 bg-dark-900/50 py-6 text-gray-500 transition hover:border-accent/30 hover:text-accent"
       >
         <span className="text-2xl">+</span>
         <span className="text-sm font-medium">Add Server</span>
@@ -575,6 +609,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [servers, setServers] = useState<Server[]>([]);
   const [loading, setLoading] = useState(true);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     async function fetchServers() {
@@ -590,6 +625,10 @@ export default function DashboardPage() {
     const interval = setInterval(fetchServers, 10000);
     return () => clearInterval(interval);
   }, []);
+
+  function toggleCollapse(serverId: string) {
+    setCollapsed((prev) => ({ ...prev, [serverId]: !prev[serverId] }));
+  }
 
   async function handleRename(serverId: string, name: string) {
     const res = await fetch("/api/server", {
@@ -648,26 +687,27 @@ export default function DashboardPage() {
   if (servers.length === 0) {
     return (
       <div className="space-y-6">
-        <div className="py-20 text-center text-gray-400">
+        <AddServerForm onAdd={handleAddServer} />
+        <div className="py-12 text-center text-gray-400">
           No servers connected. Add a server to get started.
         </div>
-        <AddServerForm onAdd={handleAddServer} />
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      <AddServerForm onAdd={handleAddServer} />
       {servers.map((server) => (
         <ServerSection
           key={server.id}
           server={server}
+          collapsed={!!collapsed[server.id]}
+          onToggleCollapse={() => toggleCollapse(server.id)}
           onRename={handleRename}
           onRemove={handleRemove}
-          showRemove={true}
         />
       ))}
-      <AddServerForm onAdd={handleAddServer} />
     </div>
   );
 }
