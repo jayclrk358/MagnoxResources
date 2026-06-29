@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { siteUrls } from "@/lib/sites";
 
 interface ConfigSummary {
   id: string;
@@ -409,12 +410,12 @@ function ServerSection({
           {/* Plugins */}
           <div className="mb-4 flex items-center justify-between">
             <h3 className="text-lg font-semibold text-white">Plugins</h3>
-            <button
-              onClick={() => router.push("/dashboard/docs")}
+            <a
+              href={siteUrls.docs}
               className="text-xs text-gray-400 transition hover:text-accent"
             >
               View Documentation &rarr;
-            </button>
+            </a>
           </div>
 
           {server.plugins.length === 0 ? (

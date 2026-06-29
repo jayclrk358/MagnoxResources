@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
+import { siteUrls } from "@/lib/sites";
 
 export default function DashboardLayout({
   children,
@@ -14,11 +15,6 @@ export default function DashboardLayout({
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
   }
-
-  const navItems = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/dashboard/docs", label: "Docs" },
-  ];
 
   return (
     <div className="min-h-screen">
@@ -35,25 +31,33 @@ export default function DashboardLayout({
               Magnox<span className="text-accent">Resources</span>
             </a>
             <div className="hidden items-center gap-1 sm:flex">
-              {navItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                    pathname.startsWith(item.href) &&
-                    (item.href !== "/dashboard" || pathname === "/dashboard")
-                      ? "bg-dark-600 text-white"
-                      : "text-gray-400 hover:bg-dark-700 hover:text-white"
-                  }`}
-                >
-                  {item.label}
-                </a>
-              ))}
+              <a
+                href="/dashboard"
+                className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                  pathname === "/dashboard"
+                    ? "bg-dark-600 text-white"
+                    : "text-gray-400 hover:bg-dark-700 hover:text-white"
+                }`}
+              >
+                Dashboard
+              </a>
+              <a
+                href={siteUrls.plugins}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-400 transition hover:bg-dark-700 hover:text-white"
+              >
+                Plugins
+              </a>
+              <a
+                href={siteUrls.docs}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-400 transition hover:bg-dark-700 hover:text-white"
+              >
+                Docs
+              </a>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <a
-              href="/dashboard/docs"
+              href={siteUrls.docs}
               className="hidden rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent sm:block"
             >
               Need help?

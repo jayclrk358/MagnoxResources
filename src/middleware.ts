@@ -15,8 +15,18 @@ function hasValidTokens(request: NextRequest): boolean {
   return false;
 }
 
+function getSubdomain(host: string): string | null {
+  const hostname = host.split(":")[0];
+  if (hostname === "localhost" || hostname === "127.0.0.1") return null;
+  const parts = hostname.split(".");
+  if (parts.length >= 3) return parts[0];
+  return null;
+}
+
 export async function middleware(request: NextRequest) {
+  const host = request.headers.get("host") || "";
   const { pathname } = request.nextUrl;
+  const subdomain = getSubdomain(host);
 
   if (
     pathname === "/login" ||
@@ -26,16 +36,33 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!hasValidTokens(request)) {
-    if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Subdomain routing
+  if (subdomain === "docs") {
+    return NextResponse.rewrite(new URL("/docs", request.url));
+  }
+
+  if (subdomain === "plugins") {
+    return NextResponse.rewrite(new URL("/plugins", request.url));
+  }
+
+  if (subdomain === "panel" && pathname === "/") {
+    const dest = hasValidTokens(request) ? "/dashboard" : "/login";
+    return NextResponse.redirect(new URL(dest, request.url));
+  }
+
+  // Auth check for dashboard and server API
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/api/server")) {
+    if (!hasValidTokens(request)) {
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      return NextResponse.redirect(new URL("/login", request.url));
     }
-    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/api/server/:path*"],
+  matcher: ["/((?!_next/static|_next/image|favicon\\.ico).*)"],
 };
