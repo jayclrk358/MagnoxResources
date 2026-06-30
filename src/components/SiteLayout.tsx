@@ -21,16 +21,16 @@ export function SiteLayout({
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="sticky top-0 z-50 border-b border-dark-600 bg-dark-800/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:px-6">
+          <div className="flex min-w-0 items-center gap-8">
             <a
               href={siteUrls.home}
-              className="flex items-center gap-2 text-lg font-bold text-white sm:text-xl"
+              className="flex min-w-0 items-center gap-2 text-base font-bold text-white sm:text-xl"
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-sm font-black text-white">
                 M
               </span>
-              <span className="whitespace-nowrap">
+              <span className="truncate">
                 Magnox<span className="text-accent">Resources</span>
               </span>
             </a>
@@ -50,7 +50,7 @@ export function SiteLayout({
               ))}
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <a
               href={siteUrls.panel}
               className="hidden rounded-lg bg-accent px-4 py-1.5 text-sm font-medium text-white transition hover:bg-accent-hover sm:block"
@@ -59,7 +59,7 @@ export function SiteLayout({
             </a>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-300 transition hover:bg-dark-700 sm:hidden"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-300 transition hover:bg-dark-700 sm:hidden"
               aria-label="Toggle menu"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
