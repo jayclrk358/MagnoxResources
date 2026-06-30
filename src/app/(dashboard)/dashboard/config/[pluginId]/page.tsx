@@ -151,7 +151,9 @@ function ConfigSection({
           <div key={key}>
             <div
               className={`${
-                isNested ? "" : "flex items-center justify-between gap-4"
+                isNested
+                  ? ""
+                  : "flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
               }`}
             >
               <label className="mb-1 block text-sm font-medium text-gray-300">
@@ -322,13 +324,13 @@ export default function ConfigEditorPage({
         {/* Editor */}
         <div className="flex-1">
           {selectedConfig ? (
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-              <div className="mb-6 flex items-center justify-between">
-                <div>
+            <div className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6">
+              <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
                   <h2 className="text-xl font-semibold text-white">
                     {selectedConfig.name}
                   </h2>
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 break-all text-xs text-gray-500">
                     {selectedConfig.fileName} &middot; Last updated:{" "}
                     {new Date(selectedConfig.updatedAt).toLocaleString()}
                   </p>
@@ -348,14 +350,14 @@ export default function ConfigEditorPage({
                         }
                       }
                     }}
-                    className="rounded-lg border border-dark-500 px-3 py-1.5 text-xs text-gray-400 transition hover:border-accent hover:text-accent"
+                    className="flex-1 rounded-lg border border-dark-500 px-3 py-1.5 text-xs text-gray-400 transition hover:border-accent hover:text-accent sm:flex-initial"
                   >
                     {jsonMode ? "Visual Editor" : "JSON Editor"}
                   </button>
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-hover disabled:opacity-50"
+                    className="flex-1 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-hover disabled:opacity-50 sm:flex-initial"
                   >
                     {saving ? "Saving..." : saved ? "Saved!" : "Save & Push"}
                   </button>

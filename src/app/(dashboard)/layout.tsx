@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { siteUrls } from "@/lib/sites";
 
@@ -10,58 +11,53 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
   }
 
+  const navItems = [
+    { href: siteUrls.home, label: "Home", active: false },
+    { href: "/dashboard", label: "Dashboard", active: pathname === "/dashboard" },
+    { href: siteUrls.plugins, label: "Plugins", active: false },
+    { href: siteUrls.docs, label: "Docs", active: false },
+  ];
+
   return (
     <div className="min-h-screen">
       <nav className="sticky top-0 z-50 border-b border-dark-600 bg-dark-800/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
           <div className="flex items-center gap-8">
             <a
               href={siteUrls.home}
-              className="flex items-center gap-2 text-xl font-bold text-white"
+              className="flex items-center gap-2 text-lg font-bold text-white sm:text-xl"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-sm font-black text-white">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-sm font-black text-white">
                 M
               </span>
-              Magnox<span className="text-accent">Resources</span>
+              <span className="whitespace-nowrap">
+                Magnox<span className="text-accent">Resources</span>
+              </span>
             </a>
             <div className="hidden items-center gap-1 sm:flex">
-              <a
-                href={siteUrls.home}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-400 transition hover:bg-dark-700 hover:text-white"
-              >
-                Home
-              </a>
-              <a
-                href="/dashboard"
-                className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                  pathname === "/dashboard"
-                    ? "bg-dark-600 text-white"
-                    : "text-gray-400 hover:bg-dark-700 hover:text-white"
-                }`}
-              >
-                Dashboard
-              </a>
-              <a
-                href={siteUrls.plugins}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-400 transition hover:bg-dark-700 hover:text-white"
-              >
-                Plugins
-              </a>
-              <a
-                href={siteUrls.docs}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-gray-400 transition hover:bg-dark-700 hover:text-white"
-              >
-                Docs
-              </a>
+              {navItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    item.active
+                      ? "bg-dark-600 text-white"
+                      : "text-gray-400 hover:bg-dark-700 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              ))}
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <a
               href={siteUrls.docs}
               className="hidden rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent sm:block"
@@ -70,14 +66,62 @@ export default function DashboardLayout({
             </a>
             <button
               onClick={handleLogout}
-              className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-300 transition hover:border-danger hover:text-danger"
+              className="hidden rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-300 transition hover:border-danger hover:text-danger sm:block"
             >
               Disconnect
             </button>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-300 transition hover:bg-dark-700 sm:hidden"
+              aria-label="Toggle menu"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                {menuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="border-t border-dark-600 bg-dark-800 px-4 py-3 sm:hidden">
+            <div className="flex flex-col gap-1">
+              {navItems.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={`rounded-lg px-3 py-2.5 text-sm font-medium transition ${
+                    item.active
+                      ? "bg-dark-600 text-white"
+                      : "text-gray-400 hover:bg-dark-700 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              ))}
+              <div className="mt-2 flex flex-col gap-2 border-t border-dark-600 pt-3">
+                <a
+                  href={siteUrls.docs}
+                  className="rounded-lg border border-dark-500 px-3 py-2.5 text-center text-sm text-gray-300 transition hover:border-accent hover:text-accent"
+                >
+                  Need help?
+                </a>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-lg border border-dark-500 px-3 py-2.5 text-sm text-gray-300 transition hover:border-danger hover:text-danger"
+                >
+                  Disconnect
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
-      <main className="mx-auto max-w-7xl px-6 py-8">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
       <footer className="border-t border-dark-700 py-6 text-center text-xs text-gray-600">
         MagnoxResources Panel &middot; Plugins sync every 30 seconds
       </footer>

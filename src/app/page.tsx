@@ -20,17 +20,17 @@ export default function HomePage() {
   return (
     <SiteLayout active="home">
       {/* Hero */}
-      <section className="px-6 pt-24 pb-20 text-center">
+      <section className="px-4 pt-16 pb-12 text-center sm:px-6 sm:pt-24 sm:pb-20">
         <div className="mx-auto max-w-3xl">
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl">
+          <h1 className="text-4xl font-black tracking-tight text-white sm:text-6xl">
             Magnox<span className="text-accent">Resources</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-gray-400">
+          <p className="mx-auto mt-6 max-w-xl text-base text-gray-400 sm:text-lg">
             Powerful tools for managing your Minecraft server. Configure
             plugins, track punishments, and customize your lobby — all from
             one platform.
           </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <div className="mt-8 flex flex-wrap justify-center gap-4 sm:mt-10">
             <a
               href={siteUrls.panel}
               className="rounded-lg bg-accent px-6 py-3 font-medium text-white transition hover:bg-accent-hover"
@@ -48,14 +48,14 @@ export default function HomePage() {
       </section>
 
       {/* Products */}
-      <section className="mx-auto max-w-5xl px-6 py-16">
+      <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
         <h2 className="mb-8 text-center text-sm font-semibold uppercase tracking-wider text-gray-500">
           Everything you need
         </h2>
         <div className="grid gap-6 md:grid-cols-3">
           <a
             href={siteUrls.panel}
-            className="group rounded-2xl border border-dark-600 bg-dark-800 p-8 transition hover:border-accent/30"
+            className="group rounded-2xl border border-dark-600 bg-dark-800 p-6 transition hover:border-accent/30 sm:p-8"
           >
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-xl font-bold text-accent">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -74,7 +74,7 @@ export default function HomePage() {
 
           <a
             href={siteUrls.plugins}
-            className="group rounded-2xl border border-dark-600 bg-dark-800 p-8 transition hover:border-accent/30"
+            className="group rounded-2xl border border-dark-600 bg-dark-800 p-6 sm:p-8 transition hover:border-accent/30"
           >
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-xl font-bold text-accent">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -93,7 +93,7 @@ export default function HomePage() {
 
           <a
             href={siteUrls.docs}
-            className="group rounded-2xl border border-dark-600 bg-dark-800 p-8 transition hover:border-accent/30"
+            className="group rounded-2xl border border-dark-600 bg-dark-800 p-6 sm:p-8 transition hover:border-accent/30"
           >
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-xl font-bold text-accent">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -113,7 +113,7 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="mx-auto max-w-5xl px-6 py-16">
+      <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
         <h2 className="mb-8 text-center text-2xl font-bold text-white">
           Built for server admins
         </h2>
@@ -146,7 +146,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="px-6 py-20 text-center">
+      <section className="px-4 py-16 text-center sm:px-6 sm:py-20">
         <div className="mx-auto max-w-lg">
           <h2 className="text-2xl font-bold text-white">Ready to get started?</h2>
           <p className="mt-3 text-sm text-gray-400">

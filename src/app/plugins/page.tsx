@@ -17,9 +17,9 @@ function RequirementItem({
   value: string;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg bg-dark-700 px-4 py-2.5">
-      <span className="text-xs text-gray-400">{label}</span>
-      <span className="text-xs font-medium text-gray-300">{value}</span>
+    <div className="rounded-lg bg-dark-700 px-4 py-2.5">
+      <span className="block text-[10px] uppercase tracking-wide text-gray-500">{label}</span>
+      <span className="mt-0.5 block text-xs font-medium text-gray-300">{value}</span>
     </div>
   );
 }
@@ -27,9 +27,9 @@ function RequirementItem({
 export default function PluginsPage() {
   return (
     <SiteLayout active="plugins">
-      <div className="mx-auto max-w-5xl px-6 py-12">
-        <div className="mb-12">
-          <h1 className="text-3xl font-bold text-white">Plugins</h1>
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <div className="mb-8 sm:mb-12">
+          <h1 className="text-2xl font-bold text-white sm:text-3xl">Plugins</h1>
           <p className="mt-2 text-sm text-gray-400">
             Powerful, feature-rich plugins for your Minecraft server and
             proxy network.
@@ -38,7 +38,7 @@ export default function PluginsPage() {
 
         <div className="space-y-8">
           {/* MagnoxLobby */}
-          <div className="rounded-2xl border border-dark-600 bg-dark-800 p-8">
+          <div className="rounded-2xl border border-dark-600 bg-dark-800 p-5 sm:p-8">
             <div className="flex items-start gap-4">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-2xl font-bold text-accent">
                 L
@@ -114,7 +114,7 @@ export default function PluginsPage() {
           </div>
 
           {/* MagnoxPunish */}
-          <div className="rounded-2xl border border-dark-600 bg-dark-800 p-8">
+          <div className="rounded-2xl border border-dark-600 bg-dark-800 p-5 sm:p-8">
             <div className="flex items-start gap-4">
               <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-2xl font-bold text-accent">
                 P
@@ -183,7 +183,7 @@ export default function PluginsPage() {
         </div>
 
         {/* Quick Setup */}
-        <div className="mt-12 rounded-2xl border border-accent/20 bg-accent/5 p-8">
+        <div className="mt-12 rounded-2xl border border-accent/20 bg-accent/5 p-5 sm:p-8">
           <h2 className="mb-6 text-xl font-bold text-white">Quick Setup</h2>
           <div className="grid gap-6 md:grid-cols-3">
             <div className="rounded-xl bg-dark-800 p-6">

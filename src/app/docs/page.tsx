@@ -28,9 +28,9 @@ function Placeholder({
   description: string;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-dark-600 bg-dark-700 px-4 py-2.5">
-      <div>
-        <code className="text-sm font-medium text-accent">{name}</code>
+    <div className="flex items-start justify-between gap-3 rounded-lg border border-dark-600 bg-dark-700 px-4 py-2.5">
+      <div className="min-w-0">
+        <code className="break-words text-sm font-medium text-accent">{name}</code>
         <p className="mt-0.5 text-xs text-gray-400">{description}</p>
       </div>
       <CopyButton text={name} />
@@ -102,35 +102,37 @@ export default function DocsPage() {
 
   return (
     <SiteLayout active="docs">
-      <div className="mx-auto max-w-5xl px-6 py-12">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">Documentation</h1>
+          <h1 className="text-2xl font-bold text-white sm:text-3xl">Documentation</h1>
           <p className="mt-2 text-sm text-gray-400">
             Reference for placeholders, config files, and plugin integration.
           </p>
         </div>
 
         {/* Tabs */}
-        <div className="mb-6 flex flex-wrap gap-1 rounded-lg bg-dark-800 p-1">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`rounded-md px-4 py-2 text-sm font-medium transition ${
-                activeTab === tab.id
-                  ? "bg-accent text-white"
-                  : "text-gray-400 hover:bg-dark-700 hover:text-white"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="mb-6 -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <div className="flex w-max min-w-full gap-1 rounded-lg bg-dark-800 p-1 sm:w-full sm:flex-wrap">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition ${
+                  activeTab === tab.id
+                    ? "bg-accent text-white"
+                    : "text-gray-400 hover:bg-dark-700 hover:text-white"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Placeholders Tab */}
         {activeTab === "placeholders" && (
           <div className="space-y-6">
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
+            <div className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6">
               <h2 className="mb-1 text-lg font-semibold text-white">
                 Built-in Placeholders
               </h2>
@@ -147,7 +149,7 @@ export default function DocsPage() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
+            <div className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6">
               <h2 className="mb-1 text-lg font-semibold text-white">
                 PlaceholderAPI Placeholders
               </h2>
@@ -158,42 +160,54 @@ export default function DocsPage() {
                 <code className="text-gray-300">%placeholder%</code> format in
                 config files.
               </p>
-              <div className="space-y-2">
-                <Placeholder name="%player_name%" description="Player's username" />
-                <Placeholder name="%player_displayname%" description="Player's display name (with formatting)" />
-                <Placeholder name="%player_uuid%" description="Player's UUID" />
-                <Placeholder name="%player_health%" description="Current health (0-20)" />
-                <Placeholder name="%player_food_level%" description="Current hunger level (0-20)" />
-                <Placeholder name="%player_level%" description="Player's experience level" />
-                <Placeholder name="%player_gamemode%" description="Current gamemode (SURVIVAL, CREATIVE, etc.)" />
-                <Placeholder name="%player_world%" description="Name of the world the player is in" />
-                <Placeholder name="%player_x%" description="Player's X coordinate" />
-                <Placeholder name="%player_y%" description="Player's Y coordinate" />
-                <Placeholder name="%player_z%" description="Player's Z coordinate" />
-                <Placeholder name="%player_ping%" description="Player's latency in ms" />
-                <Placeholder name="%player_first_join%" description="Date of player's first join" />
-                <Placeholder name="%player_bed_x%" description="X coordinate of player's bed/respawn point" />
-                <Placeholder name="%server_online%" description="Total online players on the server" />
-                <Placeholder name="%server_max_players%" description="Maximum server slots" />
-                <Placeholder name="%server_tps%" description="Server TPS (ticks per second)" />
-                <Placeholder name="%server_tps_1%" description="Server TPS over last 1 minute" />
-                <Placeholder name="%server_tps_5%" description="Server TPS over last 5 minutes" />
-                <Placeholder name="%server_tps_15%" description="Server TPS over last 15 minutes" />
-                <Placeholder name="%server_ram_used%" description="RAM currently used (MB)" />
-                <Placeholder name="%server_ram_max%" description="Maximum RAM allocated (MB)" />
-                <Placeholder name="%server_uptime%" description="Server uptime since last restart" />
-                <Placeholder name="%server_version%" description="Minecraft server version" />
-                <Placeholder name="%vault_eco_balance%" description="Player's economy balance (requires Vault)" />
-                <Placeholder name="%vault_prefix%" description="Player's chat prefix (requires Vault)" />
-                <Placeholder name="%vault_suffix%" description="Player's chat suffix (requires Vault)" />
-                <Placeholder name="%vault_rank%" description="Player's primary group/rank (requires Vault)" />
-                <Placeholder name="%luckperms_prefix%" description="Player's LuckPerms prefix" />
-                <Placeholder name="%luckperms_suffix%" description="Player's LuckPerms suffix" />
-                <Placeholder name="%luckperms_primary_group_name%" description="Player's primary LuckPerms group" />
+              <div className="space-y-3">
+                <Collapsible title="Player (14)">
+                  <div className="space-y-2">
+                    <Placeholder name="%player_name%" description="Player's username" />
+                    <Placeholder name="%player_displayname%" description="Player's display name (with formatting)" />
+                    <Placeholder name="%player_uuid%" description="Player's UUID" />
+                    <Placeholder name="%player_health%" description="Current health (0-20)" />
+                    <Placeholder name="%player_food_level%" description="Current hunger level (0-20)" />
+                    <Placeholder name="%player_level%" description="Player's experience level" />
+                    <Placeholder name="%player_gamemode%" description="Current gamemode (SURVIVAL, CREATIVE, etc.)" />
+                    <Placeholder name="%player_world%" description="Name of the world the player is in" />
+                    <Placeholder name="%player_x%" description="Player's X coordinate" />
+                    <Placeholder name="%player_y%" description="Player's Y coordinate" />
+                    <Placeholder name="%player_z%" description="Player's Z coordinate" />
+                    <Placeholder name="%player_ping%" description="Player's latency in ms" />
+                    <Placeholder name="%player_first_join%" description="Date of player's first join" />
+                    <Placeholder name="%player_bed_x%" description="X coordinate of player's bed/respawn point" />
+                  </div>
+                </Collapsible>
+                <Collapsible title="Server (10)">
+                  <div className="space-y-2">
+                    <Placeholder name="%server_online%" description="Total online players on the server" />
+                    <Placeholder name="%server_max_players%" description="Maximum server slots" />
+                    <Placeholder name="%server_tps%" description="Server TPS (ticks per second)" />
+                    <Placeholder name="%server_tps_1%" description="Server TPS over last 1 minute" />
+                    <Placeholder name="%server_tps_5%" description="Server TPS over last 5 minutes" />
+                    <Placeholder name="%server_tps_15%" description="Server TPS over last 15 minutes" />
+                    <Placeholder name="%server_ram_used%" description="RAM currently used (MB)" />
+                    <Placeholder name="%server_ram_max%" description="Maximum RAM allocated (MB)" />
+                    <Placeholder name="%server_uptime%" description="Server uptime since last restart" />
+                    <Placeholder name="%server_version%" description="Minecraft server version" />
+                  </div>
+                </Collapsible>
+                <Collapsible title="Economy & Ranks (7)">
+                  <div className="space-y-2">
+                    <Placeholder name="%vault_eco_balance%" description="Player's economy balance (requires Vault)" />
+                    <Placeholder name="%vault_prefix%" description="Player's chat prefix (requires Vault)" />
+                    <Placeholder name="%vault_suffix%" description="Player's chat suffix (requires Vault)" />
+                    <Placeholder name="%vault_rank%" description="Player's primary group/rank (requires Vault)" />
+                    <Placeholder name="%luckperms_prefix%" description="Player's LuckPerms prefix" />
+                    <Placeholder name="%luckperms_suffix%" description="Player's LuckPerms suffix" />
+                    <Placeholder name="%luckperms_primary_group_name%" description="Player's primary LuckPerms group" />
+                  </div>
+                </Collapsible>
               </div>
             </div>
 
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
+            <div className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6">
               <h2 className="mb-1 text-lg font-semibold text-white">
                 MiniMessage Formatting
               </h2>
@@ -222,7 +236,7 @@ export default function DocsPage() {
         {/* MagnoxLobby Tab */}
         {activeTab === "magnoxlobby" && (
           <div className="space-y-4">
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
+            <div className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6">
               <h2 className="mb-1 text-lg font-semibold text-white">
                 MagnoxLobby
               </h2>
@@ -466,10 +480,7 @@ export default function DocsPage() {
               ]}
             />
 
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-              <h3 className="mb-2 text-sm font-semibold text-white">
-                Permissions
-              </h3>
+            <Collapsible title="Permissions (8)">
               <div className="space-y-2">
                 <Placeholder
                   name="magnoxlobby.admin"
@@ -504,12 +515,9 @@ export default function DocsPage() {
                   description="Access all cosmetics"
                 />
               </div>
-            </div>
+            </Collapsible>
 
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-              <h3 className="mb-2 text-sm font-semibold text-white">
-                Commands
-              </h3>
+            <Collapsible title="Commands (7)">
               <div className="space-y-2">
                 <Placeholder
                   name="/spawn"
@@ -540,14 +548,14 @@ export default function DocsPage() {
                   description="List all available commands"
                 />
               </div>
-            </div>
+            </Collapsible>
           </div>
         )}
 
         {/* MagnoxPunish Tab */}
         {activeTab === "magnoxpunish" && (
           <div className="space-y-4">
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
+            <div className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6">
               <h2 className="mb-1 text-lg font-semibold text-white">
                 MagnoxPunish
               </h2>
@@ -601,10 +609,7 @@ export default function DocsPage() {
               ]}
             />
 
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-              <h3 className="mb-2 text-sm font-semibold text-white">
-                Commands
-              </h3>
+            <Collapsible title="Commands (9)">
               <div className="space-y-2">
                 <Placeholder
                   name="/ban <player> <reason>"
@@ -643,12 +648,9 @@ export default function DocsPage() {
                   description="View a player's full punishment history"
                 />
               </div>
-            </div>
+            </Collapsible>
 
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-              <h3 className="mb-2 text-sm font-semibold text-white">
-                Permissions
-              </h3>
+            <Collapsible title="Permissions (9)">
               <div className="space-y-2">
                 <Placeholder
                   name="punishments.ban"
@@ -687,12 +689,9 @@ export default function DocsPage() {
                   description="View punishment history"
                 />
               </div>
-            </div>
+            </Collapsible>
 
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-              <h3 className="mb-2 text-sm font-semibold text-white">
-                Duration Format
-              </h3>
+            <Collapsible title="Duration Format">
               <p className="mb-3 text-sm text-gray-400">
                 Used for <code className="text-gray-300">/tempban</code> and{" "}
                 <code className="text-gray-300">/tempmute</code> durations.
@@ -709,12 +708,9 @@ export default function DocsPage() {
                   description="Combined: 1 day, 2 hours, 30 minutes"
                 />
               </div>
-            </div>
+            </Collapsible>
 
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
-              <h3 className="mb-2 text-sm font-semibold text-white">
-                Message Placeholders
-              </h3>
+            <Collapsible title="Message Placeholders (9)">
               <p className="mb-3 text-sm text-gray-400">
                 Available in message templates in{" "}
                 <code className="text-gray-300">config.toml</code>.
@@ -757,14 +753,14 @@ export default function DocsPage() {
                   description="Date punishment was issued (history)"
                 />
               </div>
-            </div>
+            </Collapsible>
           </div>
         )}
 
         {/* Plugin API Tab */}
         {activeTab === "api" && (
           <div className="space-y-4">
-            <div className="rounded-xl border border-dark-600 bg-dark-800 p-6">
+            <div className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6">
               <h2 className="mb-1 text-lg font-semibold text-white">
                 Plugin API
               </h2>

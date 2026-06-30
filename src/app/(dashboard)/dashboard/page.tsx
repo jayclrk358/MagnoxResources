@@ -46,12 +46,12 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="rounded-xl border border-dark-600 bg-dark-800 p-5">
-      <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+    <div className="rounded-xl border border-dark-600 bg-dark-800 p-3 sm:p-5">
+      <p className="text-[10px] font-medium uppercase tracking-wider text-gray-500 sm:text-xs">
         {label}
       </p>
-      <p className={`mt-1 text-2xl font-bold ${color}`}>{value}</p>
-      {sub && <p className="mt-0.5 text-xs text-gray-500">{sub}</p>}
+      <p className={`mt-1 text-lg font-bold sm:text-2xl ${color}`}>{value}</p>
+      {sub && <p className="mt-0.5 truncate text-xs text-gray-500">{sub}</p>}
     </div>
   );
 }
@@ -182,10 +182,10 @@ function ServerSection({
   const nextSync = serverNextSync(server);
 
   return (
-    <div className="rounded-2xl border border-dark-600 bg-dark-900 p-6">
+    <div className="rounded-2xl border border-dark-600 bg-dark-900 p-4 sm:p-6">
       {/* Server Header — always visible */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-3">
           <button
             onClick={onToggleCollapse}
             className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-gray-400 transition hover:bg-dark-700 hover:text-white"
@@ -201,14 +201,14 @@ function ServerSection({
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          <div>
+          <div className="min-w-0">
             {editing ? (
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2">
                 <input
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleRename()}
-                  className="rounded-lg border border-dark-500 bg-dark-700 px-3 py-1.5 text-2xl font-bold text-white focus:border-accent focus:outline-none"
+                  className="min-w-0 rounded-lg border border-dark-500 bg-dark-700 px-3 py-1.5 text-xl font-bold text-white focus:border-accent focus:outline-none sm:text-2xl"
                   autoFocus
                 />
                 <button
@@ -229,8 +229,8 @@ function ServerSection({
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-3">
-                <h2 className="text-2xl font-bold text-white">{server.name}</h2>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <h2 className="break-all text-xl font-bold text-white sm:text-2xl">{server.name}</h2>
                 <button
                   onClick={() => setEditing(true)}
                   className="rounded-md px-2 py-1 text-xs text-gray-500 transition hover:bg-dark-600 hover:text-gray-300"
@@ -273,7 +273,7 @@ function ServerSection({
           {!collapsed && (
             <button
               onClick={() => setShowSetup(!showSetup)}
-              className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent"
+              className="flex-1 rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent sm:flex-initial"
             >
               {showSetup ? "Hide Setup" : "Setup Guide"}
             </button>
@@ -281,7 +281,7 @@ function ServerSection({
           <button
             onClick={handleRemove}
             disabled={removing}
-            className="rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-danger hover:text-danger disabled:opacity-50"
+            className="flex-1 rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-danger hover:text-danger disabled:opacity-50 sm:flex-initial"
           >
             {removing ? "..." : "Remove"}
           </button>
@@ -293,7 +293,7 @@ function ServerSection({
         <>
           {/* Setup Guide */}
           {showSetup && (
-            <div className="mt-6 rounded-xl border border-accent/20 bg-accent/5 p-6">
+            <div className="mt-6 rounded-xl border border-accent/20 bg-accent/5 p-4 sm:p-6">
               <h3 className="mb-3 text-sm font-semibold text-accent">
                 Quick Setup Guide
               </h3>
@@ -339,7 +339,7 @@ function ServerSection({
           )}
 
           {/* Stat Cards */}
-          <div className="mt-6 mb-8 grid grid-cols-2 gap-4 md:grid-cols-5">
+          <div className="mt-6 mb-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-5">
             <StatCard
               label="Players"
               value={
@@ -442,14 +442,14 @@ function ServerSection({
                 return (
                   <div
                     key={plugin.id}
-                    className="rounded-xl border border-dark-600 bg-dark-800 p-6"
+                    className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6"
                   >
-                    <div className="mb-4 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
+                    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
                           {pluginIcon(plugin.type)}
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <h4 className="text-lg font-semibold text-white">
                             {pluginLabel(plugin.type)}
                           </h4>
@@ -458,7 +458,7 @@ function ServerSection({
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         {plugin.version && (
                           <span className="rounded-md bg-dark-600 px-2.5 py-1 text-xs font-medium text-gray-300">
                             v{plugin.version}
@@ -567,9 +567,9 @@ function AddServerForm({
   }
 
   return (
-    <div className="rounded-2xl border border-dark-600 bg-dark-900 p-6">
+    <div className="rounded-2xl border border-dark-600 bg-dark-900 p-4 sm:p-6">
       <h3 className="mb-4 text-lg font-semibold text-white">Add Server</h3>
-      <form onSubmit={handleSubmit} className="flex items-start gap-3">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-start">
         <div className="flex-1">
           <input
             type="text"
@@ -583,24 +583,26 @@ function AddServerForm({
             <p className="mt-2 text-sm text-danger">{error}</p>
           )}
         </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition hover:bg-accent-hover disabled:opacity-50"
-        >
-          {loading ? "Adding..." : "Add"}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setOpen(false);
-            setToken("");
-            setError("");
-          }}
-          className="rounded-lg border border-dark-500 px-4 py-2.5 text-sm text-gray-400 transition hover:text-white"
-        >
-          Cancel
-        </button>
+        <div className="flex gap-3">
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex-1 rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition hover:bg-accent-hover disabled:opacity-50 sm:flex-initial"
+          >
+            {loading ? "Adding..." : "Add"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(false);
+              setToken("");
+              setError("");
+            }}
+            className="flex-1 rounded-lg border border-dark-500 px-4 py-2.5 text-sm text-gray-400 transition hover:text-white sm:flex-initial"
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
