@@ -122,8 +122,39 @@ export default function DashboardLayout({
         )}
       </nav>
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
-      <footer className="border-t border-dark-700 py-6 text-center text-xs text-gray-600">
-        MagnoxResources Panel &middot; Plugins sync every 30 seconds
+
+      <footer className="border-t border-dark-700 bg-dark-800/40">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <a
+                href={siteUrls.home}
+                className="flex items-center gap-2 text-sm font-bold text-white"
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-accent text-xs font-black text-white">
+                  M
+                </span>
+                Magnox<span className="text-accent">Resources</span>
+              </a>
+              <span className="text-dark-600">|</span>
+              <span className="text-xs text-gray-600">Configs sync every 30 seconds</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <a href={siteUrls.plugins} className="text-xs text-gray-500 transition hover:text-gray-300">
+                Plugins
+              </a>
+              <a href={siteUrls.docs} className="text-xs text-gray-500 transition hover:text-gray-300">
+                Documentation
+              </a>
+              <a href={siteUrls.home} className="text-xs text-gray-500 transition hover:text-gray-300">
+                magnoxresources.com
+              </a>
+            </div>
+          </div>
+          <div className="mt-4 border-t border-dark-700 pt-4 text-center text-xs text-gray-700">
+            &copy; 2026 MagnoxResources
+          </div>
+        </div>
       </footer>
     </div>
   );

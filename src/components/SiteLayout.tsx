@@ -101,8 +101,78 @@ export function SiteLayout({
         )}
       </nav>
       <main className="flex-1">{children}</main>
-      <footer className="border-t border-dark-700 py-8 text-center text-xs text-gray-600">
-        MagnoxResources &middot; Minecraft server management tools
+
+      <footer className="border-t border-dark-700 bg-dark-800/40">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+          <div className="grid gap-8 sm:grid-cols-3">
+            <div>
+              <a
+                href={siteUrls.home}
+                className="flex items-center gap-2 text-base font-bold text-white"
+              >
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent text-xs font-black text-white">
+                  M
+                </span>
+                Magnox<span className="text-accent">Resources</span>
+              </a>
+              <p className="mt-3 text-xs leading-relaxed text-gray-500">
+                Powerful tools for Minecraft server management. Configure
+                plugins, track punishments, and customise your lobby.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Products
+              </h4>
+              <ul className="mt-3 space-y-2">
+                <li>
+                  <a href={siteUrls.panel} className="text-sm text-gray-400 transition hover:text-white">
+                    Panel
+                  </a>
+                </li>
+                <li>
+                  <a href={siteUrls.plugins} className="text-sm text-gray-400 transition hover:text-white">
+                    Plugins
+                  </a>
+                </li>
+                <li>
+                  <a href={siteUrls.docs} className="text-sm text-gray-400 transition hover:text-white">
+                    Documentation
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                Resources
+              </h4>
+              <ul className="mt-3 space-y-2">
+                <li>
+                  <a href={siteUrls.docs} className="text-sm text-gray-400 transition hover:text-white">
+                    Getting Started
+                  </a>
+                </li>
+                <li>
+                  <a href={siteUrls.docs} className="text-sm text-gray-400 transition hover:text-white">
+                    Commands &amp; Permissions
+                  </a>
+                </li>
+                <li>
+                  <a href={siteUrls.docs} className="text-sm text-gray-400 transition hover:text-white">
+                    PlaceholderAPI
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-8 border-t border-dark-700 pt-6 flex flex-col items-center gap-1 text-center text-xs text-gray-600 sm:flex-row sm:justify-between">
+            <span>&copy; 2026 MagnoxResources. All rights reserved.</span>
+            <span>Minecraft server management tools</span>
+          </div>
+        </div>
       </footer>
     </div>
   );
