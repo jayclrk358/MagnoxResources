@@ -315,11 +315,11 @@ function ServerSection({
                     2
                   </div>
                   <h4 className="mb-1 text-sm font-medium text-white">
-                    Enable Panel
+                    Start the Server
                   </h4>
                   <p className="text-xs text-gray-400">
-                    Set <code className="text-gray-300">panel.enabled: true</code>{" "}
-                    in the plugin&apos;s config file and restart. A token is auto-generated.
+                    Start or restart your server. A panel token is auto-generated
+                    on first run and printed to the server console.
                   </p>
                 </div>
                 <div className="rounded-lg bg-dark-800 p-4">
@@ -355,7 +355,9 @@ function ServerSection({
               value={
                 server.online && server.tps !== null
                   ? server.tps.toFixed(1)
-                  : "--"
+                  : server.online && server.plugins.some((p) => p.type === "MAGNOX_PUNISH")
+                    ? "N/A"
+                    : "--"
               }
               sub={
                 server.online && server.tps !== null
@@ -364,7 +366,9 @@ function ServerSection({
                     : server.tps >= 15
                       ? "moderate lag"
                       : "severe lag"
-                  : "no data"
+                  : server.online && server.plugins.some((p) => p.type === "MAGNOX_PUNISH")
+                    ? "velocity proxy"
+                    : "no data"
               }
               color={
                 server.online && server.tps !== null
@@ -459,6 +463,19 @@ function ServerSection({
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                        {plugin.type === "MAGNOX_PUNISH" && (
+                          <button
+                            onClick={() =>
+                              router.push(`/dashboard/punishments/${plugin.id}`)
+                            }
+                            className="flex items-center gap-1.5 rounded-lg border border-dark-500 px-3 py-1.5 text-xs font-medium text-gray-300 transition hover:border-danger/50 hover:text-danger"
+                          >
+                            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            View Punishments
+                          </button>
+                        )}
                         {plugin.version && (
                           <span className="rounded-md bg-dark-600 px-2.5 py-1 text-xs font-medium text-gray-300">
                             v{plugin.version}

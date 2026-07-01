@@ -22,15 +22,16 @@ model Server {
 }
 
 model Plugin {
-  id        String       @id @default(cuid())
-  type      PluginType
-  version   String?
-  server    Server       @relation(fields: [serverId], references: [id], onDelete: Cascade)
-  serverId  String
-  configs   ConfigFile[]
-  lastSync  DateTime?
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id          String             @id @default(cuid())
+  type        PluginType
+  version     String?
+  server      Server             @relation(fields: [serverId], references: [id], onDelete: Cascade)
+  serverId    String
+  configs     ConfigFile[]
+  punishments StoredPunishment[]
+  lastSync    DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 
   @@unique([serverId, type])
 }
@@ -38,6 +39,26 @@ model Plugin {
 enum PluginType {
   MAGNOX_LOBBY
   MAGNOX_PUNISH
+}
+
+model StoredPunishment {
+  id           String    @id
+  plugin       Plugin    @relation(fields: [pluginId], references: [id], onDelete: Cascade)
+  pluginId     String
+  playerUuid   String
+  playerName   String
+  type         String
+  reason       String
+  punisherName String
+  issuedAt     DateTime
+  expiresAt    DateTime?
+  active       Boolean
+  removedBy    String?
+  removedAt    DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  @@index([pluginId])
+  @@index([active])
 }
 
 model ConfigFile {
