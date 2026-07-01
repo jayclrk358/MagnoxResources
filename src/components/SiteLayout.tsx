@@ -51,12 +51,6 @@ export function SiteLayout({
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <a
-              href={siteUrls.panel}
-              className="hidden rounded-lg bg-accent px-4 py-1.5 text-sm font-medium text-white transition hover:bg-accent-hover sm:block"
-            >
-              Open Panel
-            </a>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-300 transition hover:bg-dark-700 sm:hidden"
@@ -90,12 +84,6 @@ export function SiteLayout({
                   {item.label}
                 </a>
               ))}
-              <a
-                href={siteUrls.panel}
-                className="mt-2 rounded-lg bg-accent px-3 py-2.5 text-center text-sm font-medium text-white transition hover:bg-accent-hover"
-              >
-                Open Panel
-              </a>
             </div>
           </div>
         )}

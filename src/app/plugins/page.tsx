@@ -104,12 +104,6 @@ export default function PluginsPage() {
               >
                 View Documentation
               </a>
-              <a
-                href={siteUrls.panel}
-                className="rounded-lg border border-dark-500 px-4 py-2 text-sm font-medium text-gray-300 transition hover:border-accent hover:text-accent"
-              >
-                Open Panel
-              </a>
             </div>
           </div>
 
@@ -171,12 +165,6 @@ export default function PluginsPage() {
                 className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition hover:bg-accent-hover"
               >
                 View Documentation
-              </a>
-              <a
-                href={siteUrls.panel}
-                className="rounded-lg border border-dark-500 px-4 py-2 text-sm font-medium text-gray-300 transition hover:border-accent hover:text-accent"
-              >
-                Open Panel
               </a>
             </div>
           </div>

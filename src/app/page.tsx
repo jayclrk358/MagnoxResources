@@ -32,16 +32,16 @@ export default function HomePage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4 sm:mt-10">
             <a
-              href={siteUrls.panel}
+              href={siteUrls.docs}
               className="rounded-lg bg-accent px-6 py-3 font-medium text-white transition hover:bg-accent-hover"
             >
-              Open Panel
+              View Docs
             </a>
             <a
-              href={siteUrls.docs}
+              href={siteUrls.plugins}
               className="rounded-lg border border-dark-500 px-6 py-3 font-medium text-gray-300 transition hover:border-accent hover:text-accent"
             >
-              View Docs
+              View Plugins
             </a>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function HomePage() {
               TPS tracking, and live sync with your plugins.
             </p>
             <span className="mt-4 inline-block text-sm text-accent opacity-0 transition group-hover:opacity-100">
-              Open Panel &rarr;
+              Go to Panel &rarr;
             </span>
           </a>
 

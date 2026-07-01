@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { siteUrls } from "@/lib/sites";
 
 export default function DashboardLayout({
@@ -9,18 +9,11 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
-  }
-
   const navItems = [
     { href: siteUrls.home, label: "Home", active: false },
-    { href: "/dashboard", label: "Dashboard", active: pathname === "/dashboard" },
     { href: siteUrls.plugins, label: "Plugins", active: false },
     { href: siteUrls.docs, label: "Docs", active: false },
   ];
@@ -59,17 +52,15 @@ export default function DashboardLayout({
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <a
-              href={siteUrls.docs}
-              className="hidden rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-400 transition hover:border-accent hover:text-accent sm:block"
+              href="/dashboard"
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                pathname.startsWith("/dashboard")
+                  ? "bg-dark-600 text-white"
+                  : "text-gray-400 hover:bg-dark-700 hover:text-white"
+              }`}
             >
-              Need help?
+              Dashboard
             </a>
-            <button
-              onClick={handleLogout}
-              className="hidden rounded-lg border border-dark-500 px-3 py-1.5 text-sm text-gray-300 transition hover:border-danger hover:text-danger sm:block"
-            >
-              Disconnect
-            </button>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-300 transition hover:bg-dark-700 sm:hidden"
@@ -103,20 +94,6 @@ export default function DashboardLayout({
                   {item.label}
                 </a>
               ))}
-              <div className="mt-2 flex flex-col gap-2 border-t border-dark-600 pt-3">
-                <a
-                  href={siteUrls.docs}
-                  className="rounded-lg border border-dark-500 px-3 py-2.5 text-center text-sm text-gray-300 transition hover:border-accent hover:text-accent"
-                >
-                  Need help?
-                </a>
-                <button
-                  onClick={handleLogout}
-                  className="rounded-lg border border-dark-500 px-3 py-2.5 text-sm text-gray-300 transition hover:border-danger hover:text-danger"
-                >
-                  Disconnect
-                </button>
-              </div>
             </div>
           </div>
         )}

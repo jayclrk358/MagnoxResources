@@ -121,7 +121,7 @@ export default function PunishmentsPage({
 
   useEffect(() => {
     fetchPunishments();
-    const interval = setInterval(() => fetchPunishments(true), 30000);
+    const interval = setInterval(() => fetchPunishments(true), 10000);
     return () => clearInterval(interval);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pluginId]);
