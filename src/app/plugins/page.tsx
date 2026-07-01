@@ -162,7 +162,7 @@ export default function PluginsPage() {
               <RequirementItem label="Platform" value="Velocity" />
               <RequirementItem label="Java" value="Java 17+" />
               <RequirementItem label="Databases" value="SQLite, MySQL, MariaDB, PostgreSQL" />
-              <RequirementItem label="Config" value="TOML" />
+              <RequirementItem label="Config" value="YAML" />
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">

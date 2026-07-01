@@ -589,23 +589,81 @@ export default function DocsPage() {
             </div>
 
             <ConfigFileCard
-              name="Config"
-              fileName="config.toml"
-              description="Main configuration file for MagnoxPunish. Database connection, messages, and panel settings."
+              name="Settings"
+              fileName="settings.yml"
+              description="Panel token and general plugin settings."
               keys={[
-                "database.type",
-                "database.host",
-                "database.port",
-                "database.database",
-                "database.username",
-                "database.password",
-                "database.pool-size",
+                "panel.token",
                 "general.prefix",
                 "general.date-format",
                 "general.history-limit",
-                "panel.enabled",
-                "panel.url",
-                "panel.token",
+              ]}
+            />
+
+            <ConfigFileCard
+              name="Database"
+              fileName="configs/database.yml"
+              description="Database backend selection. Set type to sqlite, mysql, mariadb, or postgresql and fill in the matching sub-section."
+              keys={[
+                "database.type",
+                "database.sqlite.file",
+                "database.mysql.host",
+                "database.mysql.port",
+                "database.mysql.database",
+                "database.mysql.username",
+                "database.mysql.password",
+                "database.mysql.pool-size",
+                "database.mariadb.host",
+                "database.mariadb.port",
+                "database.mariadb.database",
+                "database.mariadb.username",
+                "database.mariadb.password",
+                "database.mariadb.pool-size",
+                "database.postgresql.host",
+                "database.postgresql.port",
+                "database.postgresql.database",
+                "database.postgresql.username",
+                "database.postgresql.password",
+                "database.postgresql.pool-size",
+              ]}
+            />
+
+            <ConfigFileCard
+              name="Messages"
+              fileName="configs/messages.yml"
+              description="All player-facing messages. Supports legacy & color codes and MiniMessage tags (<red>, <gradient:red:blue>, etc.)."
+              keys={[
+                "messages.only-players",
+                "messages.ban.usage",
+                "messages.ban.disconnect",
+                "messages.ban.broadcast",
+                "messages.tempban.usage",
+                "messages.tempban.disconnect",
+                "messages.tempban.broadcast",
+                "messages.unban.usage",
+                "messages.unban.success",
+                "messages.unban.not-banned",
+                "messages.mute.usage",
+                "messages.mute.success",
+                "messages.mute.broadcast",
+                "messages.tempmute.usage",
+                "messages.tempmute.success",
+                "messages.tempmute.broadcast",
+                "messages.unmute.usage",
+                "messages.unmute.success",
+                "messages.unmute.not-muted",
+                "messages.kick.usage",
+                "messages.kick.disconnect",
+                "messages.kick.broadcast",
+                "messages.warn.usage",
+                "messages.warn.success",
+                "messages.warn.broadcast",
+                "messages.history.usage",
+                "messages.history.header",
+                "messages.history.entry",
+                "messages.history.empty",
+                "messages.login-ban.disconnect",
+                "messages.muted-chat.kick",
               ]}
             />
 
@@ -713,7 +771,14 @@ export default function DocsPage() {
             <Collapsible title="Message Placeholders (9)">
               <p className="mb-3 text-sm text-gray-400">
                 Available in message templates in{" "}
-                <code className="text-gray-300">config.toml</code>.
+                <code className="text-gray-300">configs/messages.yml</code>.
+                Messages support legacy{" "}
+                <code className="text-gray-300">&amp;c</code> color codes and{" "}
+                MiniMessage tags such as{" "}
+                <code className="text-gray-300">&lt;red&gt;</code>,{" "}
+                <code className="text-gray-300">&lt;gradient:red:blue&gt;</code>
+                , and{" "}
+                <code className="text-gray-300">&lt;hover:...&gt;</code>.
               </p>
               <div className="space-y-2">
                 <Placeholder
