@@ -118,9 +118,10 @@ export async function GET(request: Request) {
     content: c.content,
   }));
 
+  const version = url.searchParams.get("version");
   await prisma.plugin.update({
     where: { id: plugin.id },
-    data: { lastSync: new Date() },
+    data: { lastSync: new Date(), ...(version ? { version } : {}) },
   });
 
   if (changes.length > 0) {
