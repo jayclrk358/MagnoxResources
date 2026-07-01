@@ -51,6 +51,12 @@ export function SiteLayout({
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-2">
+            <a
+              href="/dashboard"
+              className="hidden rounded-lg px-3 py-1.5 text-sm font-medium text-gray-400 transition hover:bg-dark-700 hover:text-white sm:block"
+            >
+              Dashboard
+            </a>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-300 transition hover:bg-dark-700 sm:hidden"
@@ -84,6 +90,12 @@ export function SiteLayout({
                   {item.label}
                 </a>
               ))}
+              <a
+                href="/dashboard"
+                className="rounded-lg px-3 py-2.5 text-sm font-medium text-gray-400 transition hover:bg-dark-700 hover:text-white"
+              >
+                Dashboard
+              </a>
             </div>
           </div>
         )}
