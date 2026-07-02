@@ -19,7 +19,7 @@ export default function DashboardLayout({
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <nav className="sticky top-0 z-50 border-b border-dark-600 bg-dark-800/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-8">
@@ -27,11 +27,11 @@ export default function DashboardLayout({
               href={siteUrls.home}
               className="flex min-w-0 items-center gap-2 text-base font-bold text-white sm:text-xl"
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-sm font-black text-white">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-sm font-black text-white shadow-[0_0_16px_-2px_var(--color-accent)]">
                 M
               </span>
               <span className="truncate">
-                Magnox<span className="text-accent">Resources</span>
+                Magnox<span className="text-gradient font-black">Resources</span>
               </span>
             </a>
             <div className="hidden items-center gap-1 sm:flex">
@@ -98,9 +98,10 @@ export default function DashboardLayout({
           </div>
         )}
       </nav>
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8 animate-fade-in-up">{children}</main>
 
-      <footer className="border-t border-dark-700 bg-dark-800/40">
+      <footer className="border-t border-dark-700 bg-dark-800/40 relative overflow-hidden">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent" />
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">

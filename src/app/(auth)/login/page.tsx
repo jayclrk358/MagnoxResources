@@ -30,10 +30,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="rounded-2xl border border-dark-600 bg-dark-800 p-8 shadow-xl">
+    <div className="animate-fade-in-up rounded-2xl border border-dark-600 bg-dark-800 p-8 shadow-xl">
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold text-white">
-          Magnox<span className="text-accent">Resources</span>
+          Magnox<span className="text-gradient">Resources</span>
         </h1>
         <p className="mt-2 text-sm text-gray-400">
           Enter your server token to manage plugin configurations

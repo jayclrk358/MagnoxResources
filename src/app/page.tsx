@@ -23,7 +23,7 @@ export default function HomePage() {
       <section className="px-4 pt-16 pb-12 text-center sm:px-6 sm:pt-24 sm:pb-20">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-4xl font-black tracking-tight text-white sm:text-6xl">
-            Magnox<span className="text-accent">Resources</span>
+            Magnox<span className="text-gradient">Resources</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-gray-400 sm:text-lg">
             Powerful tools for managing your Minecraft server. Configure
@@ -39,7 +39,7 @@ export default function HomePage() {
             </a>
             <a
               href={siteUrls.plugins}
-              className="rounded-lg border border-dark-500 px-6 py-3 font-medium text-gray-300 transition hover:border-accent hover:text-accent"
+              className="rounded-lg border border-dark-500 px-6 py-3 font-medium text-gray-300 transition hover:border-accent hover:text-accent hover:shadow-[0_0_20px_-4px_var(--color-accent)]"
             >
               View Plugins
             </a>
@@ -162,7 +162,7 @@ export default function HomePage() {
             </a>
             <a
               href={siteUrls.docs}
-              className="rounded-lg border border-dark-500 px-6 py-3 font-medium text-gray-300 transition hover:border-accent hover:text-accent"
+              className="rounded-lg border border-dark-500 px-6 py-3 font-medium text-gray-300 transition hover:border-accent hover:text-accent hover:shadow-[0_0_20px_-4px_var(--color-accent)]"
             >
               Read the Docs
             </a>

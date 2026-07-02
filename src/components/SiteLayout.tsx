@@ -27,11 +27,11 @@ export function SiteLayout({
               href={siteUrls.home}
               className="flex min-w-0 items-center gap-2 text-base font-bold text-white sm:text-xl"
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-sm font-black text-white">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-sm font-black text-white shadow-[0_0_16px_-2px_var(--color-accent)]">
                 M
               </span>
               <span className="truncate">
-                Magnox<span className="text-accent">Resources</span>
+                Magnox<span className="text-gradient font-black">Resources</span>
               </span>
             </a>
             <div className="hidden items-center gap-1 sm:flex">
@@ -100,9 +100,10 @@ export function SiteLayout({
           </div>
         )}
       </nav>
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 animate-fade-in-up">{children}</main>
 
-      <footer className="border-t border-dark-700 bg-dark-800/40">
+      <footer className="relative overflow-hidden border-t border-dark-700 bg-dark-800/40">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent" />
         <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
           <div className="grid gap-8 sm:grid-cols-3">
             <div>

@@ -13,7 +13,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        <div className="aurora-bg" aria-hidden="true">
+          <div className="aurora-blob aurora-blob-1" />
+          <div className="aurora-blob aurora-blob-2" />
+          <div className="aurora-blob aurora-blob-3" />
+        </div>
+        {children}
+      </body>
     </html>
   );
 }
