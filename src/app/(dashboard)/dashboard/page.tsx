@@ -628,7 +628,6 @@ function AddServerForm({
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
   const [servers, setServers] = useState<Server[]>([]);
   const [loading, setLoading] = useState(true);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -672,11 +671,7 @@ export default function DashboardPage() {
       body: JSON.stringify({ serverId }),
     });
     if (res.ok) {
-      const remaining = servers.filter((s) => s.id !== serverId);
-      setServers(remaining);
-      if (remaining.length === 0) {
-        router.push("/login");
-      }
+      setServers((prev) => prev.filter((s) => s.id !== serverId));
     }
   }
 

@@ -46,18 +46,15 @@ export async function middleware(request: NextRequest) {
   }
 
   if (subdomain === "panel" && pathname === "/") {
-    const dest = hasValidTokens(request) ? "/dashboard" : "/login";
-    return NextResponse.redirect(new URL(dest, request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // Auth check for dashboard and server API
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/api/server")) {
-    if (!hasValidTokens(request)) {
-      if (pathname.startsWith("/api/")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+  // The dashboard page itself handles the "no servers connected yet" state
+  // (shows an inline Add Server form), so new visitors aren't forced through
+  // a separate token gate just to see the page. The server API still
+  // requires a valid token — it just returns no data instead of a redirect.
+  if (pathname.startsWith("/api/server") && !hasValidTokens(request)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   return NextResponse.next();
