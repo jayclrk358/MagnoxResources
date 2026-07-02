@@ -27,9 +27,11 @@ export function SiteLayout({
               href={siteUrls.home}
               className="flex min-w-0 items-center gap-2 text-base font-bold text-white sm:text-xl"
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent text-sm font-black text-white shadow-[0_0_16px_-2px_var(--color-accent)]">
-                M
-              </span>
+              <img
+                src="/icon-magnoxresources.svg"
+                alt="MagnoxResources"
+                className="h-8 w-8 shrink-0 rounded-lg shadow-[0_0_16px_-2px_var(--color-accent)]"
+              />
               <span className="truncate">
                 Magnox<span className="text-gradient font-black">Resources</span>
               </span>
@@ -111,9 +113,7 @@ export function SiteLayout({
                 href={siteUrls.home}
                 className="flex items-center gap-2 text-base font-bold text-white"
               >
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-accent text-xs font-black text-white">
-                  M
-                </span>
+                <img src="/icon-magnoxresources.svg" alt="MagnoxResources" className="h-7 w-7 shrink-0 rounded-lg" />
                 Magnox<span className="text-accent">Resources</span>
               </a>
               <p className="mt-3 text-xs leading-relaxed text-gray-500">

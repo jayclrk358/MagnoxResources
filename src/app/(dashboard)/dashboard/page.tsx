@@ -101,11 +101,11 @@ function pluginLabel(type: string) {
 function pluginIcon(type: string) {
   switch (type) {
     case "MAGNOX_LOBBY":
-      return "L";
+      return "/icon-magnoxlobby.svg";
     case "MAGNOX_PUNISH":
-      return "P";
+      return "/icon-magnoxpunish.svg";
     default:
-      return "?";
+      return "/icon-magnoxresources.svg";
   }
 }
 
@@ -450,9 +450,11 @@ function ServerSection({
                   >
                     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-lg font-bold text-accent">
-                          {pluginIcon(plugin.type)}
-                        </div>
+                        <img
+                          src={pluginIcon(plugin.type)}
+                          alt={pluginLabel(plugin.type)}
+                          className="h-10 w-10 shrink-0 rounded-lg"
+                        />
                         <div className="min-w-0">
                           <h4 className="text-lg font-semibold text-white">
                             {pluginLabel(plugin.type)}

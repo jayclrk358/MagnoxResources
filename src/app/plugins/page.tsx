@@ -40,9 +40,7 @@ export default function PluginsPage() {
           {/* MagnoxLobby */}
           <div className="rounded-2xl border border-dark-600 bg-dark-800 p-5 sm:p-8">
             <div className="flex items-start gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-2xl font-bold text-accent">
-                L
-              </div>
+              <img src="/icon-magnoxlobby.svg" alt="MagnoxLobby" className="h-14 w-14 shrink-0 rounded-xl" />
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3">
                   <h2 className="text-2xl font-bold text-white">MagnoxLobby</h2>
@@ -110,9 +108,7 @@ export default function PluginsPage() {
           {/* MagnoxPunish */}
           <div className="rounded-2xl border border-dark-600 bg-dark-800 p-5 sm:p-8">
             <div className="flex items-start gap-4">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-2xl font-bold text-accent">
-                P
-              </div>
+              <img src="/icon-magnoxpunish.svg" alt="MagnoxPunish" className="h-14 w-14 shrink-0 rounded-xl" />
               <div className="flex-1">
                 <div className="flex flex-wrap items-center gap-3">
                   <h2 className="text-2xl font-bold text-white">MagnoxPunish</h2>

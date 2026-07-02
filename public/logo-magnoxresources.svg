@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <clipPath id="mrClip"><rect x="0" y="0" width="512" height="512" rx="112"/></clipPath>
+    <pattern id="mrTex" width="128" height="128" patternUnits="userSpaceOnUse">
+    <rect x="0" y="0" width="16" height="16" fill="#7c3aed"/>
+    <rect x="16" y="0" width="16" height="16" fill="#6d28d9"/>
+    <rect x="32" y="0" width="16" height="16" fill="#7c3aed"/>
+    <rect x="48" y="0" width="16" height="16" fill="#7c3aed"/>
+    <rect x="64" y="0" width="16" height="16" fill="#7c3aed"/>
+    <rect x="80" y="0" width="16" height="16" fill="#9333ea"/>
+    <rect x="96" y="0" width="16" height="16" fill="#7c3aed"/>
+    <rect x="112" y="0" width="16" height="16" fill="#9333ea"/>
+    <rect x="0" y="16" width="16" height="16" fill="#6d28d9"/>
+    <rect x="16" y="16" width="16" height="16" fill="#7c3aed"/>
+    <rect x="32" y="16" width="16" height="16" fill="#9333ea"/>
+    <rect x="48" y="16" width="16" height="16" fill="#6d28d9"/>
+    <rect x="64" y="16" width="16" height="16" fill="#7c3aed"/>
+    <rect x="80" y="16" width="16" height="16" fill="#9333ea"/>
+    <rect x="96" y="16" width="16" height="16" fill="#a855f7"/>
+    <rect x="112" y="16" width="16" height="16" fill="#7c3aed"/>
+    <rect x="0" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="16" y="32" width="16" height="16" fill="#9333ea"/>
+    <rect x="32" y="32" width="16" height="16" fill="#9333ea"/>
+    <rect x="48" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="64" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="80" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="96" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="112" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="0" y="48" width="16" height="16" fill="#7c3aed"/>
+    <rect x="16" y="48" width="16" height="16" fill="#6d28d9"/>
+    <rect x="32" y="48" width="16" height="16" fill="#6d28d9"/>
+    <rect x="48" y="48" width="16" height="16" fill="#9333ea"/>
+    <rect x="64" y="48" width="16" height="16" fill="#9333ea"/>
+    <rect x="80" y="48" width="16" height="16" fill="#9333ea"/>
+    <rect x="96" y="48" width="16" height="16" fill="#9333ea"/>
+    <rect x="112" y="48" width="16" height="16" fill="#6d28d9"/>
+    <rect x="0" y="64" width="16" height="16" fill="#7c3aed"/>
+    <rect x="16" y="64" width="16" height="16" fill="#7c3aed"/>
+    <rect x="32" y="64" width="16" height="16" fill="#7c3aed"/>
+    <rect x="48" y="64" width="16" height="16" fill="#7c3aed"/>
+    <rect x="64" y="64" width="16" height="16" fill="#7c3aed"/>
+    <rect x="80" y="64" width="16" height="16" fill="#6d28d9"/>
+    <rect x="96" y="64" width="16" height="16" fill="#6d28d9"/>
+    <rect x="112" y="64" width="16" height="16" fill="#a855f7"/>
+    <rect x="0" y="80" width="16" height="16" fill="#a855f7"/>
+    <rect x="16" y="80" width="16" height="16" fill="#7c3aed"/>
+    <rect x="32" y="80" width="16" height="16" fill="#6d28d9"/>
+    <rect x="48" y="80" width="16" height="16" fill="#7c3aed"/>
+    <rect x="64" y="80" width="16" height="16" fill="#a855f7"/>
+    <rect x="80" y="80" width="16" height="16" fill="#9333ea"/>
+    <rect x="96" y="80" width="16" height="16" fill="#9333ea"/>
+    <rect x="112" y="80" width="16" height="16" fill="#9333ea"/>
+    <rect x="0" y="96" width="16" height="16" fill="#6d28d9"/>
+    <rect x="16" y="96" width="16" height="16" fill="#a855f7"/>
+    <rect x="32" y="96" width="16" height="16" fill="#9333ea"/>
+    <rect x="48" y="96" width="16" height="16" fill="#6d28d9"/>
+    <rect x="64" y="96" width="16" height="16" fill="#7c3aed"/>
+    <rect x="80" y="96" width="16" height="16" fill="#7c3aed"/>
+    <rect x="96" y="96" width="16" height="16" fill="#6d28d9"/>
+    <rect x="112" y="96" width="16" height="16" fill="#7c3aed"/>
+    <rect x="0" y="112" width="16" height="16" fill="#9333ea"/>
+    <rect x="16" y="112" width="16" height="16" fill="#9333ea"/>
+    <rect x="32" y="112" width="16" height="16" fill="#6d28d9"/>
+    <rect x="48" y="112" width="16" height="16" fill="#9333ea"/>
+    <rect x="64" y="112" width="16" height="16" fill="#9333ea"/>
+    <rect x="80" y="112" width="16" height="16" fill="#a855f7"/>
+    <rect x="96" y="112" width="16" height="16" fill="#9333ea"/>
+    <rect x="112" y="112" width="16" height="16" fill="#9333ea"/>
+    </pattern>
+  </defs>
+
+  <g clip-path="url(#mrClip)">
+    <rect x="0" y="0" width="512" height="512" fill="url(#mrTex)"/>
+    <!-- minecraft-style block bevel shading -->
+    <rect x="0" y="0" width="512" height="16" fill="#ffffff" opacity="0.18"/>
+    <rect x="0" y="0" width="16" height="512" fill="#ffffff" opacity="0.14"/>
+    <rect x="0" y="496" width="512" height="16" fill="#000000" opacity="0.28"/>
+    <rect x="496" y="0" width="16" height="512" fill="#000000" opacity="0.22"/>
+
+    <!-- hub network mark: three plugin nodes connected to a central resources hub -->
+    <g transform="translate(256,196) scale(0.72) translate(-256,-256)">
+      <g stroke="#ffffff" stroke-width="10" stroke-linecap="round" opacity="0.55">
+        <line x1="145" y1="320" x2="367" y2="320"/>
+        <line x1="256" y1="256" x2="256" y2="128"/>
+        <line x1="256" y1="256" x2="145" y2="320"/>
+        <line x1="256" y1="256" x2="367" y2="320"/>
+      </g>
+      <circle cx="256" cy="128" r="30" fill="#ffffff"/>
+      <circle cx="145" cy="320" r="30" fill="#ffffff" opacity="0.92"/>
+      <circle cx="367" cy="320" r="30" fill="#ffffff" opacity="0.92"/>
+      <circle cx="256" cy="256" r="42" fill="#ffffff"/>
+      <circle cx="256" cy="256" r="16" fill="#8b5cf6"/>
+    </g>
+
+    <!-- name banner -->
+    <rect x="0" y="378" width="512" height="92" fill="#000000" opacity="0.38"/>
+    <text x="256" y="440" text-anchor="middle" font-family="Verdana, 'Segoe UI', sans-serif" font-weight="800"
+          font-size="52" fill="#ffffff" textLength="430" lengthAdjust="spacingAndGlyphs">MagnoxResources</text>
+  </g>
+</svg>

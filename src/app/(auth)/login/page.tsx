@@ -32,6 +32,7 @@ export default function LoginPage() {
   return (
     <div className="animate-fade-in-up rounded-2xl border border-dark-600 bg-dark-800 p-8 shadow-xl">
       <div className="mb-8 text-center">
+        <img src="/icon-magnoxresources.svg" alt="MagnoxResources" className="mx-auto mb-3 h-14 w-14 rounded-xl" />
         <h1 className="text-3xl font-bold text-white">
           Magnox<span className="text-gradient">Resources</span>
         </h1>

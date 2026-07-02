@@ -8,9 +8,7 @@ export default function AuthLayout({
       <div className="w-full max-w-md">{children}</div>
       <footer className="mt-10 flex flex-col items-center gap-2">
         <div className="flex items-center gap-2 text-sm font-bold text-white/60">
-          <span className="flex h-5 w-5 items-center justify-center rounded bg-accent text-xs font-black text-white">
-            M
-          </span>
+          <img src="/icon-magnoxresources.svg" alt="MagnoxResources" className="h-5 w-5 rounded" />
           MagnoxResources
         </div>
         <p className="text-xs text-gray-700">&copy; 2026 MagnoxResources &middot; Minecraft server management</p>

@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <clipPath id="mlClip"><rect x="0" y="0" width="512" height="512" rx="112"/></clipPath>
+    <pattern id="mlTex" width="128" height="128" patternUnits="userSpaceOnUse">
+    <rect x="0" y="0" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="16" y="0" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="32" y="0" width="16" height="16" fill="#7c3aed"/>
+    <rect x="48" y="0" width="16" height="16" fill="#6d28d9"/>
+    <rect x="64" y="0" width="16" height="16" fill="#7c3aed"/>
+    <rect x="80" y="0" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="96" y="0" width="16" height="16" fill="#7c3aed"/>
+    <rect x="112" y="0" width="16" height="16" fill="#6d28d9"/>
+    <rect x="0" y="16" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="16" y="16" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="32" y="16" width="16" height="16" fill="#7c3aed"/>
+    <rect x="48" y="16" width="16" height="16" fill="#7c3aed"/>
+    <rect x="64" y="16" width="16" height="16" fill="#7c3aed"/>
+    <rect x="80" y="16" width="16" height="16" fill="#7c3aed"/>
+    <rect x="96" y="16" width="16" height="16" fill="#6d28d9"/>
+    <rect x="112" y="16" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="0" y="32" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="16" y="32" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="32" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="48" y="32" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="64" y="32" width="16" height="16" fill="#6d28d9"/>
+    <rect x="80" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="96" y="32" width="16" height="16" fill="#7c3aed"/>
+    <rect x="112" y="32" width="16" height="16" fill="#a78bfa"/>
+    <rect x="0" y="48" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="16" y="48" width="16" height="16" fill="#7c3aed"/>
+    <rect x="32" y="48" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="48" y="48" width="16" height="16" fill="#7c3aed"/>
+    <rect x="64" y="48" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="80" y="48" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="96" y="48" width="16" height="16" fill="#7c3aed"/>
+    <rect x="112" y="48" width="16" height="16" fill="#6d28d9"/>
+    <rect x="0" y="64" width="16" height="16" fill="#7c3aed"/>
+    <rect x="16" y="64" width="16" height="16" fill="#6d28d9"/>
+    <rect x="32" y="64" width="16" height="16" fill="#6d28d9"/>
+    <rect x="48" y="64" width="16" height="16" fill="#7c3aed"/>
+    <rect x="64" y="64" width="16" height="16" fill="#a78bfa"/>
+    <rect x="80" y="64" width="16" height="16" fill="#6d28d9"/>
+    <rect x="96" y="64" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="112" y="64" width="16" height="16" fill="#6d28d9"/>
+    <rect x="0" y="80" width="16" height="16" fill="#6d28d9"/>
+    <rect x="16" y="80" width="16" height="16" fill="#7c3aed"/>
+    <rect x="32" y="80" width="16" height="16" fill="#7c3aed"/>
+    <rect x="48" y="80" width="16" height="16" fill="#a78bfa"/>
+    <rect x="64" y="80" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="80" y="80" width="16" height="16" fill="#6d28d9"/>
+    <rect x="96" y="80" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="112" y="80" width="16" height="16" fill="#7c3aed"/>
+    <rect x="0" y="96" width="16" height="16" fill="#a78bfa"/>
+    <rect x="16" y="96" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="32" y="96" width="16" height="16" fill="#7c3aed"/>
+    <rect x="48" y="96" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="64" y="96" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="80" y="96" width="16" height="16" fill="#a78bfa"/>
+    <rect x="96" y="96" width="16" height="16" fill="#7c3aed"/>
+    <rect x="112" y="96" width="16" height="16" fill="#6d28d9"/>
+    <rect x="0" y="112" width="16" height="16" fill="#a78bfa"/>
+    <rect x="16" y="112" width="16" height="16" fill="#6d28d9"/>
+    <rect x="32" y="112" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="48" y="112" width="16" height="16" fill="#6d28d9"/>
+    <rect x="64" y="112" width="16" height="16" fill="#7c3aed"/>
+    <rect x="80" y="112" width="16" height="16" fill="#6d28d9"/>
+    <rect x="96" y="112" width="16" height="16" fill="#8b5cf6"/>
+    <rect x="112" y="112" width="16" height="16" fill="#a78bfa"/>
+    </pattern>
+  </defs>
+
+  <g clip-path="url(#mlClip)">
+    <rect x="0" y="0" width="512" height="512" fill="url(#mlTex)"/>
+    <rect x="0" y="0" width="512" height="16" fill="#ffffff" opacity="0.18"/>
+    <rect x="0" y="0" width="16" height="512" fill="#ffffff" opacity="0.14"/>
+    <rect x="0" y="496" width="512" height="16" fill="#000000" opacity="0.28"/>
+    <rect x="496" y="0" width="16" height="512" fill="#000000" opacity="0.22"/>
+
+    <!-- compass / waypoint mark: spawn point & server-selector hub -->
+    <g transform="translate(256,196) scale(0.72) translate(-256,-256)">
+      <path d="M256,106 L291.4,220.6 L406,256 L291.4,291.4 L256,406 L220.6,291.4 L106,256 L220.6,220.6 Z" fill="#ffffff"/>
+      <circle cx="256" cy="256" r="26" fill="#6d28d9"/>
+      <circle cx="256" cy="256" r="11" fill="#ffffff"/>
+    </g>
+
+    <rect x="0" y="378" width="512" height="92" fill="#000000" opacity="0.38"/>
+    <text x="256" y="440" text-anchor="middle" font-family="Verdana, 'Segoe UI', sans-serif" font-weight="800"
+          font-size="56" fill="#ffffff" textLength="380" lengthAdjust="spacingAndGlyphs">MagnoxLobby</text>
+  </g>
+</svg>
