@@ -155,7 +155,7 @@ export default function PluginsPage() {
             <div className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
               <RequirementItem label="Platform" value="Velocity" />
               <RequirementItem label="Java" value="Java 17+" />
-              <RequirementItem label="Databases" value="SQLite, MySQL, MariaDB, PostgreSQL" />
+              <RequirementItem label="Databases" value="SQLite, MySQL, MariaDB, PostgreSQL, MongoDB" />
               <RequirementItem label="Config" value="YAML" />
             </div>
 
