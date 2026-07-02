@@ -37,11 +37,11 @@ export async function middleware(request: NextRequest) {
   }
 
   // Subdomain routing
-  if (subdomain === "docs") {
+  if (subdomain === "docs" && pathname === "/") {
     return NextResponse.rewrite(new URL("/docs", request.url));
   }
 
-  if (subdomain === "plugins") {
+  if (subdomain === "plugins" && pathname === "/") {
     return NextResponse.rewrite(new URL("/plugins", request.url));
   }
 
