@@ -1,6 +1,21 @@
 import { cookies } from "next/headers";
 import { prisma } from "./prisma";
 
+// No Domain attribute means the cookie is host-only and won't be sent when
+// navigating between subdomains (panel/docs/plugins/root all share one app).
+// Scope it to the whole apex domain in production so login carries over.
+export function cookieOptions(maxAge: number) {
+  const isProd = process.env.NODE_ENV === "production";
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: "lax" as const,
+    maxAge,
+    path: "/",
+    ...(isProd ? { domain: ".magnoxresources.com" } : {}),
+  };
+}
+
 export async function getServerTokens(): Promise<string[]> {
   const cookieStore = await cookies();
 

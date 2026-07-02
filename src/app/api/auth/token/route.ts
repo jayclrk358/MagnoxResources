@@ -1,16 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { cookies } from "next/headers";
-
-function cookieOptions(maxAge: number) {
-  return {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax" as const,
-    maxAge,
-    path: "/",
-  };
-}
+import { cookieOptions } from "@/lib/auth";
 
 async function getExistingTokens(): Promise<string[]> {
   const cookieStore = await cookies();
