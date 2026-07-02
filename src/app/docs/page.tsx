@@ -546,10 +546,23 @@ export default function DocsPage() {
             {/* Known Issues */}
             <div>
               <SectionTitle emoji="🐛" label="Known Issues" />
-              <div className="rounded-xl border border-green-500/20 bg-green-500/5 p-6 text-center">
-                <div className="text-3xl">✓</div>
-                <p className="mt-2 text-sm font-semibold text-green-400">No known issues</p>
-                <p className="mt-1 text-xs text-gray-500">MagnoxPunish is stable. Report bugs to the developer.</p>
+              <div className="rounded-xl border border-warning/20 bg-warning/5 p-5">
+                <div className="flex items-start gap-3">
+                  <span className="mt-0.5 text-warning">⚠️</span>
+                  <div>
+                    <p className="text-sm font-semibold text-warning">
+                      Chat mute disconnects the player instead of silently cancelling the message
+                    </p>
+                    <p className="mt-1 text-xs text-gray-400">
+                      Due to a limitation in Velocity&apos;s chat event handling, the chat event cannot be
+                      reliably cancelled in place once a muted player sends a message. As a workaround,
+                      MagnoxPunish disconnects the player with the{" "}
+                      <code className="text-gray-300">messages.muted-chat.kick</code> message instead of
+                      silently blocking it. This is a Velocity platform limitation, not a bug in the mute
+                      logic itself — a proper in-place cancellation fix is being investigated.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
