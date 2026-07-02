@@ -411,6 +411,8 @@ export default function DocsPage() {
                   { icon: "📡", title: "Panel Integration", description: "Pushes a full punishment snapshot to the panel every 60 seconds for live viewing in the dashboard." },
                   { icon: "🗄️", title: "Multi-Database", description: "SQLite (default), MySQL, MariaDB, and PostgreSQL via HikariCP connection pooling, plus MongoDB." },
                   { icon: "📢", title: "Staff Broadcasts", description: "Configurable broadcast messages notify all online staff when a punishment is issued." },
+                  { icon: "🏅", title: "LuckPerms Integration", description: "Adds {punisher_prefix} and {punisher_group} placeholders sourced live from LuckPerms for use in message templates." },
+                  { icon: "🔌", title: "MiniPlaceholders Support", description: "The Velocity-native equivalent of PlaceholderAPI. Global placeholders resolve automatically in every message." },
                 ].map((f) => (
                   <FeatureCard key={f.title} {...f} />
                 ))}
@@ -490,9 +492,11 @@ export default function DocsPage() {
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 <DepChip name="Velocity 3+" required />
                 <DepChip name="Java 17+" required />
+                <DepChip name="LuckPerms" />
+                <DepChip name="MiniPlaceholders" />
               </div>
               <p className="mt-3 text-xs text-gray-500">
-                No optional dependencies — MagnoxPunish is fully self-contained.
+                Optional dependencies are detected at runtime. The plugin starts and works fully without them.
               </p>
             </div>
 
@@ -520,7 +524,7 @@ export default function DocsPage() {
                     <Placeholder name="1d2h30m" description="Combined: 1 day, 2 hours, 30 minutes" />
                   </div>
                 </Collapsible>
-                <Collapsible title="Message Placeholders (9)">
+                <Collapsible title="Message Placeholders (11)">
                   <p className="mb-3 text-sm text-gray-400">
                     Available in all message templates in{" "}
                     <code className="text-gray-300">configs/messages.yml</code>. Messages support
@@ -530,6 +534,8 @@ export default function DocsPage() {
                     <Placeholder name="{player}" description="Target player's name" />
                     <Placeholder name="{reason}" description="Punishment reason" />
                     <Placeholder name="{punisher}" description="Staff member who issued the punishment" />
+                    <Placeholder name="{punisher_prefix}" description="Punisher's LuckPerms prefix (requires LuckPerms)" />
+                    <Placeholder name="{punisher_group}" description="Punisher's primary LuckPerms group (requires LuckPerms)" />
                     <Placeholder name="{duration}" description="Duration string (e.g. '2 hours 30 minutes')" />
                     <Placeholder name="{remaining}" description="Time remaining until expiry" />
                     <Placeholder name="{id}" description="Punishment database ID (history)" />
@@ -559,7 +565,7 @@ export default function DocsPage() {
             <div className="rounded-xl border border-dark-600 bg-dark-800 p-4 sm:p-6">
               <h2 className="mb-1 text-lg font-semibold text-white">Built-in Placeholders</h2>
               <p className="mb-4 text-sm text-gray-400">
-                Available in all MagnoxLobby config files. No plugins required.
+                Available in all MagnoxLobby config files. No PlaceholderAPI required.
               </p>
               <div className="space-y-2">
                 <Placeholder name="{player}" description="Player's display name" />
@@ -568,6 +574,9 @@ export default function DocsPage() {
                 <Placeholder name="{server}" description="Server name" />
                 <Placeholder name="{world}" description="Player's current world name" />
                 <Placeholder name="{ping}" description="Player's latency in ms" />
+                <Placeholder name="{luckperms_prefix}" description="Player's LuckPerms prefix (requires LuckPerms, resolves empty otherwise)" />
+                <Placeholder name="{luckperms_suffix}" description="Player's LuckPerms suffix (requires LuckPerms)" />
+                <Placeholder name="{luckperms_group}" description="Player's primary LuckPerms group (requires LuckPerms)" />
               </div>
             </div>
 

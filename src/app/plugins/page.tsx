@@ -146,6 +146,8 @@ export default function PluginsPage() {
                   "MiniMessage",
                   "Panel Sync",
                   "Multi-Database",
+                  "LuckPerms",
+                  "MiniPlaceholders",
                 ].map((f) => (
                   <FeatureBadge key={f} label={f} />
                 ))}
@@ -157,6 +159,7 @@ export default function PluginsPage() {
               <RequirementItem label="Java" value="Java 17+" />
               <RequirementItem label="Databases" value="SQLite, MySQL, MariaDB, PostgreSQL, MongoDB" />
               <RequirementItem label="Config" value="YAML" />
+              <RequirementItem label="Optional" value="LuckPerms, MiniPlaceholders" />
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
